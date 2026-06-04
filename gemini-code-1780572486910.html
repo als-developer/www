@@ -1,0 +1,1330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>AILifeSolution · Real Business Systems | Automated Productivity</title>
+    
+    <!-- EXACT FAVICON INTEGRATION -->
+    <link rel="icon" href="https://files.catbox.moe/6yf2rn.png" type="image/png">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient: radial-gradient(circle at 20% 30%, #061424 0%, #040d17 70%, #010408 100%);
+            --text-main: #edf2f9;
+            --text-muted: rgba(220, 240, 255, 0.8);
+            --accent-blue: #40a4d4;
+            --accent-glow: #2c8fc9;
+            --glass-bg: rgba(6, 18, 30, 0.75);
+            --card-bg: rgba(10, 25, 40, 0.45);
+            --border-glow: rgba(64, 164, 212, 0.25);
+            --transition-speed: 0.25s;
+
+            --container-max-width: 1280px;
+            --container-padding-pc: 2rem;
+            --container-padding-mobile: 1.25rem;
+            
+            --section-padding: clamp(3rem, 6vw, 6rem);
+            --hero-padding: clamp(2rem, 5vw, 4rem);
+            --hero-card-padding: clamp(1.5rem, 4vw, 3.5rem);
+            --card-padding: clamp(1.5rem, 3vw, 2.5rem);
+            
+            --services-grid-min-width: minmax(min(100%, 290px), 1fr);
+            --expert-grid-min-width: minmax(min(100%, 220px), 1fr);
+            --footer-grid-min-width: minmax(min(100%, 200px), 1fr);
+            --layout-gap: clamp(1.25rem, 3vw, 2rem);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            scroll-behavior: smooth;
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .reveal-element {
+            opacity: 0;
+            will-change: transform, opacity;
+            transition: transform 0.8s cubic-bezier(0.215, 0.61, 0.355, 1), 
+                        opacity 0.8s cubic-bezier(0.215, 0.61, 0.355, 1);
+        }
+
+        .reveal-up { transform: translateY(40px); }
+        .reveal-left { transform: translateX(-50px); }
+        .reveal-right { transform: translateX(50px); }
+
+        .reveal-element.is-visible {
+            opacity: 1;
+            transform: translate(0, 0);
+        }
+
+        .delay-1 { transition-delay: 0.1s; }
+        .delay-2 { transition-delay: 0.2s; }
+        .delay-3 { transition-delay: 0.3s; }
+        .delay-4 { transition-delay: 0.4s; }
+
+        #webgl-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .main-wrapper {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+            flex-direction: column;
+            z-index: 2;
+        }
+
+        .site-content { flex: 1; width: 100%; }
+        .container { 
+            width: 100%;
+            max-width: var(--container-max-width); 
+            margin: 0 auto; 
+            padding: 0 var(--container-padding-pc); 
+        }
+
+        .nav-dock {
+            position: fixed;
+            right: 24px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            padding: 22px 14px;
+            border-radius: 48px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid var(--border-glow);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .nav-item {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            color: #bfe3ff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            transition: all var(--transition-speed) ease;
+            background: rgba(64, 164, 212, 0.12);
+            border: 1px solid var(--border-glow);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: rgba(0, 160, 255, 0.35);
+            color: #ffffff;
+            transform: scale(1.08);
+            border-color: var(--accent-blue);
+        }
+        
+        .nav-item::after {
+            content: attr(data-title);
+            position: absolute;
+            right: 70px;
+            background: #0a1e2c;
+            backdrop-filter: blur(8px);
+            color: #aad4ff;
+            font-size: 0.75rem;
+            font-weight: 500;
+            padding: 6px 14px;
+            border-radius: 20px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity var(--transition-speed), transform var(--transition-speed);
+            border: 1px solid #2a6285;
+            transform: translateX(10px);
+        }
+        
+        .nav-item:hover::after { opacity: 1; transform: translateX(0); }
+
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border-glow);
+            border-radius: 32px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            transition: all var(--transition-speed) ease;
+        }
+
+        .top-bar {
+            background: rgba(4, 12, 22, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(64, 164, 212, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 999;
+        }
+        
+        .top-container { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 0.9rem var(--container-padding-pc); 
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        /* HIGH-END LOGO BRANDING FRAME */
+        .brand-identity {
+            flex: 1 1 auto;
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+        }
+
+        .logo-frame {
+            background: linear-gradient(135deg, rgba(6, 20, 36, 0.95) 0%, rgba(2, 8, 16, 0.98) 100%);
+            border: 1px solid rgba(64, 164, 212, 0.4);
+            padding: 0.5rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), inset 0 0 12px rgba(64, 164, 212, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-speed) ease;
+        }
+        
+        .brand-identity:hover .logo-frame {
+            border-color: var(--accent-blue);
+            box-shadow: 0 4px 25px rgba(64, 164, 212, 0.25), inset 0 0 12px rgba(64, 164, 212, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .logo-frame img {
+            height: clamp(38px, 5vw, 46px);
+            width: auto;
+            object-fit: contain;
+            display: block;
+        }
+
+        .logo-meta {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .brand-title-wrap {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .brand-name {
+            font-size: 1.45rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #ffffff 40%, #cce7ff 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .brand-badge {
+            font-size: 0.65rem;
+            font-weight: 800;
+            background: linear-gradient(105deg, #236b9e, #164f73);
+            color: #ffffff;
+            padding: 0.15rem 0.5rem;
+            border-radius: 6px;
+            letter-spacing: 0.75px;
+            border: 1px solid rgba(123, 197, 255, 0.25);
+        }
+        
+        /* ADVANCED TICKER ALLIANCE ANIMATION */
+        .ticker-viewport {
+            margin-top: 5px;
+            width: clamp(260px, 35vw, 420px);
+            overflow: hidden;
+            position: relative;
+            mask-image: linear-gradient(90deg, transparent 0%, #000 8%, #000 92%, transparent 100%);
+            -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 8%, #000 92%, transparent 100%);
+        }
+
+        .ticker-track {
+            display: flex;
+            white-space: nowrap;
+            gap: 2rem;
+            width: max-content;
+            animation: allianceTicker 22s linear infinite;
+        }
+
+        .ticker-track:hover {
+            animation-play-state: paused;
+        }
+
+        .alliance-statement {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: #7cb8e0;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        .alliance-statement i {
+            font-size: 0.55rem;
+            color: var(--accent-blue);
+            text-shadow: 0 0 6px var(--accent-blue);
+        }
+
+        @keyframes allianceTicker {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-50%, 0, 0); }
+        }
+        
+        .contact-header { 
+            display: flex; 
+            gap: 0.75rem; 
+            flex-wrap: wrap;
+            justify-content: flex-start;
+        }
+
+        .btn-small {
+            background: rgba(64, 164, 212, 0.15);
+            border: 1px solid rgba(64, 164, 212, 0.5);
+            padding: 0.5rem 1.4rem;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #c2e2ff;
+            text-decoration: none;
+            transition: var(--transition-speed) ease;
+            white-space: nowrap;
+        }
+        
+        .btn-small:hover {
+            background: var(--accent-glow);
+            color: white;
+            border-color: var(--accent-glow);
+            transform: translateY(-1px);
+        }
+
+        .hero { padding: var(--hero-padding) 0; }
+        
+        .hero-glass {
+            padding: var(--hero-card-padding);
+            border-radius: 40px;
+            background: rgba(6, 20, 34, 0.45);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(64, 164, 212, 0.25);
+        }
+        
+        .hero-grid { 
+            display: grid; 
+            grid-template-columns: 1.35fr 1fr; 
+            align-items: center; 
+            gap: var(--layout-gap); 
+        }
+        
+        .badge-deal {
+            background: rgba(0, 160, 255, 0.15);
+            backdrop-filter: blur(4px);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 1.4rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #9ed3ff;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--accent-glow);
+        }
+        
+        .hero-content h1 { 
+            font-size: clamp(2rem, 5vw, 3.2rem); 
+            line-height: 1.15; 
+            font-weight: 800; 
+        }
+        
+        .highlight { 
+            background: linear-gradient(120deg, #7bc5ff, #3faae0);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .slogan {
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            font-weight: 600;
+            border-left: 4px solid var(--accent-blue);
+            padding-left: 1rem;
+            margin: 1.5rem 0;
+            color: #cae3ff;
+        }
+        
+        .hero-desc { color: var(--text-muted); margin: 1rem 0 2rem; font-size: 1.05rem; max-width: 600px; }
+        .hero-stats { display: flex; gap: 2rem; margin: 2rem 0; flex-wrap: wrap; }
+        .stat-number { font-size: clamp(1.8rem, 4vw, 2.2rem); font-weight: 800; color: #7bc5ff; line-height: 1; }
+        .stat-label { font-size: 0.85rem; color: #7cb8e0; margin-top: 4px; }
+        
+        /* DYNAMIC FRONT HERO EMBED BRANDING WINDOW */
+        .hero-image { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            text-align: center;
+            width: 100%;
+        }
+
+        .als-showcase-window {
+            position: relative;
+            width: clamp(200px, 28vw, 300px);
+            height: clamp(200px, 28vw, 300px);
+            background: radial-gradient(circle at 30% 30%, rgba(12, 42, 74, 0.85) 0%, rgba(4, 15, 28, 0.98) 75%);
+            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+            border: 2px solid rgba(64, 164, 212, 0.45);
+            box-shadow: 0 25px 55px rgba(0, 0, 0, 0.65), inset 0 0 35px rgba(64, 164, 212, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            animation: morphingBlob 14s ease-in-out infinite alternate;
+        }
+
+        .als-showcase-window::before {
+            content: '';
+            position: absolute;
+            top: -12px; left: -12px; right: -12px; bottom: -12px;
+            border: 1px dashed rgba(64, 164, 212, 0.3);
+            border-radius: 50%;
+            animation: counterRotate 28s linear infinite;
+        }
+
+        .als-embedded-logo {
+            width: 32%;
+            height: auto;
+            object-fit: contain;
+            filter: drop-shadow(0 4px 15px rgba(64, 164, 212, 0.4));
+            margin-bottom: 0.75rem;
+        }
+
+        .als-core-text {
+            font-size: clamp(2.4rem, 6vw, 3.2rem);
+            font-weight: 900;
+            letter-spacing: -1.5px;
+            background: linear-gradient(135deg, #ffffff 30%, #7bc5ff 70%, #206d9e 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            line-height: 1;
+        }
+
+        .als-sub-text {
+            font-size: clamp(0.7rem, 1.2vw, 0.8rem);
+            font-weight: 800;
+            color: var(--accent-blue);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-top: 4px;
+        }
+
+        @keyframes morphingBlob {
+            0% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
+            50% { border-radius: 65% 35% 45% 55% / 55% 40% 60% 45%; }
+            100% { border-radius: 45% 55% 50% 50% / 45% 55% 45% 55%; }
+        }
+
+        @keyframes counterRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(-360deg); }
+        }
+        
+        .btn-primary {
+            background: linear-gradient(105deg, #236b9e, #164f73);
+            border: 1px solid rgba(123, 197, 255, 0.3);
+            padding: 0.9rem 2rem;
+            border-radius: 40px;
+            font-weight: 600;
+            color: white;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            text-decoration: none;
+            transition: all var(--transition-speed) ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        }
+        
+        .btn-primary:hover { 
+            background: var(--accent-glow); 
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(44, 143, 201, 0.3);
+        }
+        
+        .btn-secondary {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--accent-blue);
+            padding: 0.9rem 1.8rem;
+            border-radius: 40px;
+            font-weight: 500;
+            color: #cae3ff;
+            text-decoration: none;
+            transition: all var(--transition-speed) ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-secondary:hover { background: rgba(64, 164, 212, 0.1); transform: translateY(-2px); }
+        .section { padding: var(--section-padding) 0; }
+        
+        .section-subhead {
+            color: #7bc5ff;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        h2 { font-size: clamp(1.8rem, 4vw, 2.4rem); font-weight: 700; margin-bottom: 1.5rem; line-height: 1.2; }
+
+        .api-switch-panel {
+            background: rgba(0, 20, 35, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 2rem;
+            padding: 1.4rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.5rem;
+            border: 1px solid var(--accent-glow);
+            flex-wrap: wrap;
+        }
+        
+        .api-switch-panel > div {
+            flex: 1 1 auto;
+            min-width: fit-content;
+        }
+        
+        .api-badge { font-size: 0.85rem; background: #0e3b55; padding: 0.3rem 1rem; border-radius: 30px; color: #b0defa; margin-left: 0.5rem; display: inline-block; }
+        .switcher-buttons { display: flex; gap: 12px; flex-wrap: wrap; justify-content: flex-start; }
+
+        .switcher-btn {
+            background: rgba(22, 101, 139, 0.4);
+            border: 1px solid rgba(64, 164, 212, 0.3);
+            color: #cae3ff;
+            padding: 0.6rem 1.4rem;
+            border-radius: 36px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition-speed) ease;
+            font-family: inherit;
+            white-space: nowrap;
+        }
+        
+        .switcher-btn:hover, .switcher-btn.active {
+            background: #248bc2;
+            color: #ffffff;
+            border-color: #7bc5ff;
+            transform: scale(1.03);
+        }
+
+        .services-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, var(--services-grid-min-width)); 
+            gap: var(--layout-gap); 
+            margin-top: 2.5rem; 
+        }
+        
+        .service-card {
+            background: rgba(8, 25, 40, 0.6);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-radius: 2rem;
+            padding: var(--card-padding);
+            transition: all var(--transition-speed) ease, opacity 0.6s, transform 0.6s;
+            border: 1px solid var(--border-glow);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .service-card:hover {
+            background: rgba(20, 50, 75, 0.7);
+            border-color: var(--accent-blue);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+        
+        .icon-lg {
+            font-size: 2rem;
+            background: rgba(64, 164, 212, 0.15);
+            width: 64px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 20px;
+            margin-bottom: 1.5rem;
+            color: #7bc5ff;
+            flex-shrink: 0;
+        }
+
+        .service-card h3 { font-size: 1.3rem; margin-bottom: 0.75rem; }
+        .service-card p { color: var(--text-muted); font-size: 0.95rem; flex-grow: 1; }
+        
+        .deal-tag {
+            background: rgba(64, 164, 212, 0.2);
+            color: #b5deff;
+            font-weight: 600;
+            font-size: 0.75rem;
+            padding: 0.4rem 1rem;
+            border-radius: 30px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            margin-top: 1.5rem;
+            align-self: flex-start;
+            border: 1px solid rgba(64, 164, 212, 0.25);
+        }
+
+        .expertise-showcase {
+            background: rgba(8, 24, 38, 0.6);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-radius: 2.5rem;
+            padding: var(--hero-card-padding);
+            border: 1px solid rgba(64, 164, 212, 0.3);
+        }
+        
+        .stack-tag-container { display: flex; flex-wrap: wrap; gap: 0.75rem; margin: 2rem 0; }
+        
+        .stack-tag-container span {
+            background: rgba(0, 40, 60, 0.6);
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            border: 1px solid #2c6d91;
+            color: #d2ebff;
+        }
+        
+        .expert-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, var(--expert-grid-min-width)); 
+            gap: var(--layout-gap); 
+            margin-top: 2rem; 
+        }
+        
+        .expert-item {
+            background: rgba(0, 20, 32, 0.7);
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            text-align: center;
+            border: 1px solid #2c6d91;
+            transition: transform var(--transition-speed);
+            height: 100%;
+        }
+
+        .expert-item:hover { transform: scale(1.02); }
+        .expert-item i { font-size: 1.8rem; color: #7bc5ff; margin-bottom: 0.75rem; }
+
+        footer {
+            background: rgba(2, 8, 16, 0.9);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid #1e4c6e;
+            padding: var(--section-padding) 0 calc(var(--section-padding) / 2);
+            margin-top: 4rem;
+            font-size: 0.95rem;
+        }
+        
+        .footer-flex { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, var(--footer-grid-min-width)); 
+            gap: 3rem; 
+        }
+
+        @media (min-width: 769px) {
+            .footer-flex {
+                grid-template-columns: 2fr repeat(3, 1fr);
+            }
+        }
+
+        .footer-brand h3 { color: #7bc5ff; font-size: 1.4rem; margin-bottom: 0.5rem; }
+        .footer-brand p { color: var(--text-muted); margin-bottom: 1rem; }
+        .footer-brand .parent-companies { font-size: 0.8rem; color: #7cb8e0; margin-top: 10px; border-top: 1px solid rgba(64,164,212,0.2); padding-top: 10px; }
+        
+        .footer-logo-wrap {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+        .footer-logo-wrap img {
+            height: 32px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .footer-column h4 { color: white; margin-bottom: 1rem; font-size: 1rem; }
+        .footer-column ul { list-style: none; }
+        .footer-column ul li { margin-bottom: 0.6rem; }
+        .footer-column ul li a { color: var(--text-muted); text-decoration: none; transition: color var(--transition-speed); }
+        .footer-column ul li a:hover { color: #7bc5ff; }
+
+        @media (max-width: 1024px) {
+            .container { padding: 0 var(--container-padding-pc); }
+            .hero-grid { grid-template-columns: 1fr; text-align: center; }
+            .hero-desc { margin: 1rem auto 2rem; }
+            .hero-stats { justify-content: center; }
+            .slogan { border-left: none; border-top: 2px solid var(--accent-blue); padding-left: 0; padding-top: 1rem; }
+            .hero-content { order: 1; }
+            .hero-image { order: 2; margin-bottom: 2rem; }
+            .top-container { justify-content: center; text-align: center; }
+            .brand-identity { flex: 1 1 100%; flex-direction: column; align-items: center; gap: 0.75rem; }
+            .logo-meta { align-items: center; }
+            .brand-title-wrap { justify-content: center; }
+            .ticker-viewport { width: 100%; max-width: 380px; }
+            .contact-header { justify-content: center; width: 100%; }
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 0 var(--container-padding-mobile); }
+            .top-container { padding: 1rem var(--container-padding-mobile); }
+            .api-switch-panel { flex-direction: column; text-align: center; gap: 1rem; border-radius: 1.5rem; }
+            .switcher-buttons { justify-content: center; width: 100%; }
+            .switcher-btn { flex: 1 1 auto; text-align: center; font-size: 0.9rem; padding: 0.5rem 1rem; }
+            
+            .nav-dock { 
+                right: 0; 
+                bottom: 0; 
+                top: auto; 
+                transform: none; 
+                flex-direction: row; 
+                width: 100%; 
+                justify-content: space-around; 
+                border-radius: 0; 
+                padding: 10px clamp(1rem, 5vw, 2rem) calc(10px + env(safe-area-inset-bottom));
+                border-left: none; 
+                border-right: none; 
+                border-bottom: none;
+                box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.4);
+            }
+            .nav-item {
+                width: clamp(40px, 11vw, 48px);
+                height: clamp(40px, 11vw, 48px);
+                font-size: 1.05rem;
+            }
+            .nav-item::after { display: none; }
+            
+            .main-wrapper { padding-bottom: calc(70px + env(safe-area-inset-bottom)); }
+        }
+
+        @media (max-width: 480px) {
+            .contact-header .btn-small {
+                width: 100%;
+                text-align: center;
+            }
+            .hero-stats {
+                flex-direction: column;
+                gap: 1.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="webgl-canvas"></canvas>
+
+<div class="main-wrapper">
+    <div class="site-content">
+        
+        <header class="top-bar">
+            <div class="container top-container">
+                <!-- IMMACULATE LOGO AND RUNNING TICKER BRANDING FRAME -->
+                <div class="brand-identity">
+                    <div class="logo-frame">
+                        <img src="https://files.catbox.moe/6yf2rn.png" alt="AILifeSolution Official Logo">
+                    </div>
+                    <div class="logo-meta">
+                        <div class="brand-title-wrap">
+                            <span class="brand-name">AILifeSolution</span>
+                            <span class="brand-badge">SYSTEMS</span>
+                        </div>
+                        <!-- MARQUEE DATA ENGINE -->
+                        <div class="ticker-viewport" aria-hidden="true">
+                            <div class="ticker-track">
+                                <div class="alliance-statement"><i class="fa-solid fa-layer-group"></i> Powered by ZASS</div>
+                                <div class="alliance-statement"><i class="fa-solid fa-shield-halved"></i> CYITTECH UK</div>
+                                <div class="alliance-statement"><i class="fa-solid fa-atom"></i> ANTARESX</div>
+                                <div class="alliance-statement"><i class="fa-solid fa-server"></i> XIBSTECH</div>
+                                <!-- Loop Duplicate for Fluid Continuation Effect -->
+                                <div class="alliance-statement"><i class="fa-solid fa-layer-group"></i> Powered by ZASS</div>
+                                <div class="alliance-statement"><i class="fa-solid fa-shield-halved"></i> CYITTECH UK</div>
+                                <div class="alliance-statement"><i class="fa-solid fa-atom"></i> ANTARESX</div>
+                                <div class="alliance-statement"><i class="fa-solid fa-server"></i> XIBSTECH</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <nav class="contact-header" aria-label="Quick Links">
+                    <a href="#course" class="btn-small"><i class="fas fa-graduation-cap"></i> Free Learning Course</a>
+                    <a href="#contact" class="btn-small"><i class="fas fa-comment"></i> Request System Audit</a>
+                </nav>
+            </div>
+        </header>
+
+        <main>
+            <section class="hero" id="home">
+                <div class="container">
+                    <div class="hero-glass">
+                        <div class="hero-grid">
+                            <div class="hero-content reveal-element reveal-left">
+                                <div class="badge-deal"><i class="fas fa-check-circle"></i> HIGH-PRODUCTIVITY SOFTWARE ONLY</div>
+                                <h1>We build advanced, fully‑managed systems that grow your revenue.</h1>
+                                <div class="slogan"><i class="fas fa-shipping-fast"></i> 1-WEEK RAPID BUILDING · 1-MONTH REVENUE SAFETY TESTING</div>
+                                <p class="hero-desc">At <strong>AILifeSolution</strong>, we design complex business software architectures. We do not build useless, unproductive widgets. We build high-value systems like high-converting online stores, smart customer portals, and seamless automated business environments.</p>
+                                
+                                <div class="hero-stats">
+                                    <div>
+                                        <div class="stat-number">1 Week</div>
+                                        <div class="stat-label">Strict Rapid Creation</div>
+                                    </div>
+                                    <div>
+                                        <div class="stat-number">30 Days</div>
+                                        <div class="stat-label">Full Quality Stress Testing</div>
+                                    </div>
+                                    <div>
+                                        <div class="stat-number">100%</div>
+                                        <div class="stat-label">Completely Managed Support</div>
+                                    </div>
+                                </div>
+                                
+                                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                                    <a href="#services" class="btn-primary"><i class="fas fa-shopping-bag"></i> Browse Money-Making Systems</a>
+                                    <a href="#course" class="btn-secondary"><i class="fas fa-book-open"></i> Join Our Zero-Cost Class</a>
+                                </div>
+                            </div>
+                            
+                            <!-- ADVANCED BRAND WINDOW EMBEDDING THE EXPLICIT PNG ASSETS -->
+                            <div class="hero-image reveal-element reveal-right">
+                                <div class="als-showcase-window">
+                                    <img src="https://files.catbox.moe/6yf2rn.png" alt="ALS Icon Embed" class="als-embedded-logo">
+                                    <div class="als-core-text">ALS</div>
+                                    <div class="als-sub-text">Systems</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="container reveal-element reveal-up" style="margin-top: -1rem;" aria-label="Solution Switcher">
+                <div class="api-switch-panel">
+                    <div>
+                        <i class="fas fa-layer-group"></i> 
+                        <strong>What System Do You Need?</strong> 
+                        <span class="api-badge"><i class="fas fa-shield"></i> Premium Engineering</span>
+                    </div>
+                    <div class="switcher-buttons">
+                        <button id="switchToEcom" class="switcher-btn active" data-stack="eCommerce"><i class="fas fa-shopping-cart"></i> Digital E-Shops</button>
+                        <button id="switchToWorkflow" class="switcher-btn" data-stack="workflows"><i class="fas fa-bolt"></i> Personal Efficiency</button>
+                        <button id="switchToManagement" class="switcher-btn" data-stack="management"><i class="fas fa-handshake"></i> Fully Managed Care</button>
+                    </div>
+                    <div><i class="fas fa-sync-alt"></i> <span id="currentStackLabel">Active: 🛒 Digital E-Shops</span></div>
+                </div>
+            </section>
+
+            <section id="services" class="section">
+                <div class="container">
+                    <div class="section-subhead reveal-element reveal-left"><i class="fas fa-star"></i> High Value Architectures</div>
+                    <h2 id="servicesTitle" class="reveal-element reveal-left delay-1">E-Commerce & Online Business Powerhouses</h2>
+                    <div id="servicesGridContainer" class="services-grid"></div>
+                </div>
+            </section>
+
+            <section id="course" class="section" style="padding-top: 0;">
+                <div class="container">
+                    <div class="expertise-showcase reveal-element reveal-up" style="background: linear-gradient(135deg, rgba(8,35,60,0.7) 0%, rgba(2,12,24,0.9) 100%); border-color: #40a4d4;">
+                        <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem;">
+                            <div>
+                                <div class="section-subhead"><i class="fas fa-gift"></i> Zero Fees · Unlimited Access</div>
+                                <h2>Free Online Understanding Course</h2>
+                                <p style="color: #cae3ff; font-size: 1.1rem; margin-top: 0.5rem;">No payment plans. No rigid time schedules. Just your pure focus and growth.</p>
+                            </div>
+                            <i class="fas fa-graduation-cap" style="font-size: 3.5rem; color:#7bc5ff;" aria-hidden="true"></i>
+                        </div>
+                        <p style="margin: 1.5rem 0; color: var(--text-muted); line-height: 1.7;">We believe premium business knowledge should be open to all. Learn exactly how complex, high-performing software runs behind the scenes. Move completely at your own pace from the comfort of your office, with no expiration dates or credit card inputs required.</p>
+                        
+                        <div class="stack-tag-container">
+                            <span>How E-Shops Automatically Sell</span><span>Protecting Credit Card Streams</span><span>Designing Flowcharts That Save Time</span><span>How to Manage Systems Easily</span>
+                        </div>
+                        
+                        <div style="margin-top: 2rem;">
+                            <a href="#contact" class="btn-primary" style="background: #1e5a82;"><i class="fas fa-user-plus"></i> Claim Your Instant Free Access Link</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="global-network" class="section" style="padding-top: 0;">
+                <div class="container">
+                    <div class="expertise-showcase reveal-element reveal-up">
+                        <div style="text-align: center; margin-bottom: 2.5rem;">
+                            <div class="section-subhead" style="justify-content: center;"><i class="fas fa-network-wired"></i> Global Network Stability</div>
+                            <h2>Supported by World-Class Parent Companies</h2>
+                            <p style="color: var(--text-muted); max-width: 700px; margin: 0 auto;">AILifeSolution works alongside prominent software leaders to guarantee your custom setups have massive server power and unbreachable security.</p>
+                        </div>
+                        
+                        <div class="expert-grid">
+                            <div class="expert-item">
+                                <i class="fas fa-cubes" aria-hidden="true"></i>
+                                <h3>ZASS</h3>
+                                <p>Core System Frameworks</p>
+                            </div>
+                            <div class="expert-item">
+                                <i class="fas fa-building-shield" aria-hidden="true"></i>
+                                <h3>CYITTECH UK</h3>
+                                <p>Global Cloud Protections</p>
+                            </div>
+                            <div class="expert-item">
+                                <i class="fas fa-dna" aria-hidden="true"></i>
+                                <h3>AntaresX</h3>
+                                <p>Next-Gen Logic Designs</p>
+                            </div>
+                            <div class="expert-item">
+                                <i class="fas fa-server" aria-hidden="true"></i>
+                                <h3>xibstech</h3>
+                                <p>Massive Database Architecture</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="deals" class="section">
+                <div class="container">
+                    <div class="section-subhead reveal-element reveal-left"><i class="fas fa-hourglass-start"></i> Strictly Streamlined Delivery</div>
+                    <h2 class="reveal-element reveal-left delay-1">How We Guarantee <span class="highlight">Unrivaled Excellence</span></h2>
+                    
+                    <div class="services-grid">
+                        <div class="service-card reveal-element reveal-up delay-1">
+                            <div class="icon-lg"><i class="fas fa-bolt" aria-hidden="true"></i></div>
+                            <h3>1-Week Strict Building</h3>
+                            <p>Our complete specialist team dedicates all efforts to construct your shop engine in 7 days flat, without compromises or excuses.</p>
+                            <span style="font-size: 1rem; font-weight: 700; margin: 1rem 0 0.5rem; color:#7bc5ff;">No Dragging Timelines</span>
+                        </div>
+                        <div class="service-card reveal-element reveal-up delay-2">
+                            <div class="icon-lg"><i class="fas fa-vial" aria-hidden="true"></i></div>
+                            <h3>1-Month Full Testing</h3>
+                            <p>We stress-test your code for 30 full days under heavy mock visitor traffic loops to eliminate any bugs before real buyers arrive.</p>
+                            <span style="font-size: 1rem; font-weight: 700; margin: 1rem 0 0.5rem; color:#7bc5ff;">Total Stability Guaranteed</span>
+                        </div>
+                        <div class="service-card reveal-element reveal-up delay-3">
+                            <div class="icon-lg"><i class="fas fa-shield-alt" aria-hidden="true"></i></div>
+                            <h3>100% Fully Managed Care</h3>
+                            <p>You never have to touch server dashboards or hire expensive technical engineers. We manage every single element for you.</p>
+                            <span style="font-size: 1rem; font-weight: 700; margin: 1rem 0 0.5rem; color:#7bc5ff;">Pure Freedom & Safety</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="contact" class="section" style="padding: 2rem 0 5rem;">
+                <div class="container" style="text-align: center;">
+                    <div class="section-subhead reveal-element reveal-up" style="justify-content: center;">Upgrade Your Efficiency Today</div>
+                    <h2>Ready to launch a real, high-yielding business system?</h2>
+                    <p class="reveal-element reveal-up delay-2" style="margin: 1rem auto 2.5rem; max-width: 600px; color: var(--text-muted);">Request a clean, straightforward operations audit call or inquire about our completely zero-cost training course link.</p>
+                    <div class="reveal-element reveal-up delay-3" style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                        <a href="mailto:hello@ailifesolution.com" class="btn-primary"><i class="fas fa-calendar-alt"></i> Set Up A Free System Setup Call</a>
+                        <a href="mailto:hello@ailifesolution.com" class="btn-secondary"><i class="fas fa-envelope"></i> hello@ailifesolution.com</a>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <div class="container footer-flex">
+                <div class="footer-brand">
+                    <div class="footer-logo-wrap">
+                        <img src="https://files.catbox.moe/6yf2rn.png" alt="AILifeSolution Footer Logo">
+                        <h3>AILifeSolution</h3>
+                    </div>
+                    <p>High-Productivity E-Commerce & Business Systems Development Architecture.</p>
+                    <div class="parent-companies">
+                        <strong>Strategic Alliances:</strong> ZASS · CYITTECH UK · AntaresX · xibstech
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h4>Productive Systems</h4>
+                    <ul>
+                        <li><a href="#services">Premium Online Shops</a></li>
+                        <li><a href="#services">Automated Client Portals</a></li>
+                        <li><a href="#services">Personal Efficiency Layouts</a></li>
+                        <li><a href="#services">Secure Payment Gateways</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Knowledge Access</h4>
+                    <ul>
+                        <li><a href="#course">Free Online Course Login</a></li>
+                        <li><a href="#course">No-Fee Understanding Modules</a></li>
+                        <li><a href="#deals">Our 1-Week Build Guarantee</a></li>
+                        <li><a href="#deals">The 1-Month Testing Strategy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Legal & Corporate</h4>
+                    <ul>
+                        <li><a href="#">Privacy Assurances</a></li>
+                        <li><a href="#">System Integrity Metrics</a></li>
+                        <li>© 2026 AILifeSolution</li>
+                    </ul>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <nav class="nav-dock" aria-label="Navigation Panel">
+        <a href="#home" class="nav-item active" data-title="Top"><i class="fa-solid fa-house"></i></a>
+        <a href="#services" class="nav-item" data-title="System Solutions"><i class="fa-solid fa-store"></i></a>
+        <a href="#course" class="nav-item" data-title="Free Learning"><i class="fa-solid fa-graduation-cap"></i></a>
+        <a href="#deals" class="nav-item" data-title="Our Timelines"><i class="fa-solid fa-clock"></i></a>
+        <a href="#contact" class="nav-item" data-title="Connect Desk"><i class="fa-solid fa-envelope"></i></a>
+    </nav>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+    const canvas = document.querySelector('#webgl-canvas');
+    const scene = new THREE.Scene();
+    
+    const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
+    camera.position.set(3.0, 4.0, 9.5); 
+
+    const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+    const mouse = new THREE.Vector3(0, 0, 0);
+    const targetMouse = new THREE.Vector3(0, 0, 0);
+    const raycaster = new THREE.Raycaster();
+    const planeZ = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
+
+    window.addEventListener('mousemove', (e) => {
+        const ndcX = (e.clientX / window.innerWidth) * 2 - 1;
+        const ndcY = -(e.clientY / window.innerHeight) * 2 + 1;
+        raycaster.setFromCamera(new THREE.Vector2(ndcX, ndcY), camera);
+        raycaster.ray.intersectPlane(planeZ, targetMouse);
+    });
+
+    const planetarySystem = new THREE.Group();
+    if(window.innerWidth > 1024) {
+        planetarySystem.position.set(2.4, -0.2, -1.0); 
+    } else {
+        planetarySystem.position.set(0.0, -1.5, -2.0);
+    }
+    planetarySystem.rotation.set(0.38, -0.45, -0.1); 
+    scene.add(planetarySystem);
+
+    const starCount = 2000;
+    const starPositions = new Float32Array(starCount * 3);
+    for(let i=0; i<starCount; i++) {
+        starPositions[i*3]     = (Math.random() - 0.5) * 35;
+        starPositions[i*3 + 1] = (Math.random() - 0.5) * 25;
+        starPositions[i*3 + 2] = -Math.random() * 15;
+    }
+    const starGeometry = new THREE.BufferGeometry();
+    starGeometry.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
+    const starMaterial = new THREE.PointsMaterial({
+        size: 0.03, color: 0x40a4d4, transparent: true, opacity: 0.25, blending: THREE.AdditiveBlending
+    });
+    const starField = new THREE.Points(starGeometry, starMaterial);
+    scene.add(starField);
+
+    const nebulaParticleCount = 800;
+    const nebulaPositions = new Float32Array(nebulaParticleCount * 3);
+    for(let i = 0; i < nebulaParticleCount; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const radius = 3.0 + Math.random() * 6.0;
+        nebulaPositions[i*3]     = Math.cos(angle) * radius;
+        nebulaPositions[i*3 + 1] = (Math.random() - 0.5) * 8.0;
+        nebulaPositions[i*3 + 2] = (Math.random() - 0.5) * 4.0;
+    }
+    const nebulaGeometry = new THREE.BufferGeometry();
+    nebulaGeometry.setAttribute('position', new THREE.BufferAttribute(nebulaPositions, 3));
+    
+    const nebulaMaterial = new THREE.ShaderMaterial({
+        transparent: true, blending: THREE.AdditiveBlending, depthWrite: false,
+        uniforms: { uTime: { value: 0 }, uMouse: { value: new THREE.Vector3(0,0,0) } },
+        vertexShader: `
+            uniform float uTime; uniform vec3 uMouse; varying float vGlow;
+            void main() {
+                vec3 pos = position;
+                pos.y += sin(uTime * 0.4 + pos.x * 0.5) * 0.15;
+                pos.x += cos(uTime * 0.2 + pos.y * 0.5) * 0.1;
+                float mouseDist = distance(pos, uMouse * 0.5);
+                if (mouseDist < 3.0) { pos += normalize(pos - uMouse) * (3.0 - mouseDist) * 0.04; }
+                vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
+                gl_Position = projectionMatrix * mvPosition;
+                gl_PointSize = (22.0 / -mvPosition.z) * (0.6 + sin(uTime + pos.x) * 0.4);
+                vGlow = sin(uTime * 0.5 + pos.y) * 0.5 + 0.5;
+            }
+        `,
+        fragmentShader: `
+            varying float vGlow;
+            void main() {
+                float dist = distance(gl_PointCoord, vec2(0.5)); if(dist > 0.5) discard;
+                float intensity = pow(1.0 - (dist * 2.0), 2.0);
+                vec3 cyanAccent = vec3(0.25, 0.73, 0.92); vec3 deepIndigo = vec3(0.08, 0.35, 0.65);
+                vec3 finalColor = mix(cyanAccent, deepIndigo, vGlow);
+                gl_FragColor = vec4(finalColor, intensity * 0.35);
+            }
+        `
+    });
+    const nebulaField = new THREE.Points(nebulaGeometry, nebulaMaterial);
+    scene.add(nebulaField);
+
+    const glslNoiseAndLighting = `
+        float hash(float n) { return fract(sin(n) * 753.5453123); }
+        float noise(in vec3 x) {
+            vec3 p = floor(x); vec3 f = fract(x); f = f*f*(3.0-2.0*f); float n = p.x + p.y*157.0 + 113.0*p.z;
+            return mix(mix(mix(hash(n+0.0),hash(n+1.0),f.x),mix(hash(n+157.0),hash(n+158.0),f.x),f.y),
+                       mix(mix(hash(n+113.0),hash(n+114.0),f.x),mix(hash(n+270.0),hash(n+271.0),f.x),f.y),f.z);
+        }
+        float fbm(vec3 p) { float f = 0.0; f += 0.5000*noise(p); p = p*2.01; f += 0.2500*noise(p); p = p*2.02; f += 0.1250*noise(p); return f; }
+        vec3 lightDir = normalize(vec3(0.7, 0.4, 0.8));
+    `;
+
+    const planetPlanetCount = 40000;
+    const planetPositions = new Float32Array(planetPlanetCount * 3);
+    for(let i=0; i<planetPlanetCount; i++) {
+        const u = Math.random(); const v = Math.random();
+        const theta = u * 2.0 * Math.PI; const phi = Math.acos(2.0 * v - 1.0); const radius = 1.25 + (Math.random() * 0.005);
+        planetPositions[i*3]     = radius * Math.sin(phi) * Math.cos(theta);
+        planetPositions[i*3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
+        planetPositions[i*3 + 2] = radius * Math.cos(phi);
+    }
+    const planetGeometry = new THREE.BufferGeometry();
+    planetGeometry.setAttribute('position', new THREE.BufferAttribute(planetPositions, 3));
+
+    const planetShaderMaterial = new THREE.ShaderMaterial({
+        transparent: true, blending: THREE.AdditiveBlending, depthWrite: false,
+        uniforms: { uTime: { value: 0 }, uMouse: { value: new THREE.Vector3(0,0,0) } },
+        vertexShader: `
+            uniform float uTime; uniform vec3 uMouse; varying vec3 vNormal; varying vec3 vOrigPosition; varying float vCursorDist;
+            void main() {
+                vOrigPosition = position; vNormal = normalize(position); vec3 pos = position; vec4 worldPos = modelMatrix * vec4(pos, 1.0);
+                float dist = distance(worldPos.xyz, uMouse); vCursorDist = dist;
+                if(dist < 2.0) { float wave = sin(dist * 8.0 - uTime * 5.0) * 0.5 + 0.5; float force = pow(max(2.0 - dist, 0.0), 2.0) * 0.08; pos += vNormal * wave * force; }
+                vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0); gl_Position = projectionMatrix * mvPosition; gl_PointSize = (15.0 / -mvPosition.z);
+            }
+        `,
+        fragmentShader: `
+            uniform float uTime; varying vec3 vNormal; varying vec3 vOrigPosition; varying float vCursorDist;
+            ${glslNoiseAndLighting}
+            void main() {
+                if(distance(gl_PointCoord, vec2(0.5)) > 0.5) discard;
+                float bandNoise = fbm(vec3(vOrigPosition.y * 5.0, uTime * 0.03, vOrigPosition.x * 1.5));
+                float bandPattern = sin(vOrigPosition.y * 10.0 + bandNoise * 5.0);
+                vec3 deepSpaceBlue = vec3(0.04, 0.15, 0.28); vec3 brightCyberCyan = vec3(0.25, 0.64, 0.83);
+                vec3 finalColor = mix(deepSpaceBlue, brightCyberCyan, smoothstep(-0.3, 0.5, bandPattern));
+                float shading = max(dot(vNormal, lightDir), 0.2); finalColor *= shading;
+                if(vCursorDist < 2.0) { float glow = pow(max((2.0 - vCursorDist) * 0.5, 0.0), 2.0); finalColor = mix(finalColor, vec3(0.8, 0.95, 1.0), glow * 0.4); }
+                gl_FragColor = vec4(finalColor, 0.75);
+            }
+        `
+    });
+    const planetBody = new THREE.Points(planetGeometry, planetShaderMaterial);
+    planetarySystem.add(planetBody);
+
+    const ringParticleCount = 60000;
+    const ringPositions = new Float32Array(ringParticleCount * 3);
+    const ringDistances = new Float32Array(ringParticleCount);
+    const ringAngles = new Float32Array(ringParticleCount);
+    for(let i=0; i<ringParticleCount; i++) {
+        const innerRadius = 1.75; const outerRadius = 3.65; let randRadius = Math.random();
+        if((randRadius > 0.3 && randRadius < 0.36) || (randRadius > 0.7 && randRadius < 0.73)) { randRadius += 0.08; }
+        const currentRadius = innerRadius + (randRadius * (outerRadius - innerRadius)); const angle = Math.random() * Math.PI * 2;
+        ringPositions[i*3]     = Math.cos(angle) * currentRadius;
+        ringPositions[i*3 + 1] = (Math.random() - 0.5) * 0.01;
+        ringPositions[i*3 + 2] = Math.sin(angle) * currentRadius;
+        ringDistances[i] = currentRadius; ringAngles[i] = angle;
+    }
+    const ringGeometry = new THREE.BufferGeometry();
+    ringGeometry.setAttribute('position', new THREE.BufferAttribute(ringPositions, 3));
+    ringGeometry.setAttribute('aRadius', new THREE.BufferAttribute(ringDistances, 1));
+    ringGeometry.setAttribute('aAngle', new THREE.BufferAttribute(ringAngles, 1));
+
+    const ringShaderMaterial = new THREE.ShaderMaterial({
+        transparent: true, blending: THREE.AdditiveBlending, depthWrite: false,
+        uniforms: { uTime: { value: 0 }, uMouse: { value: new THREE.Vector3(0,0,0) } },
+        vertexShader: `
+            uniform float uTime; uniform vec3 uMouse; attribute float aRadius; attribute float aAngle; varying float vRadius; varying float vDisruption; varying vec3 vLocalPos;
+            void main() {
+                vRadius = aRadius; vec3 pos = position; float orbitSpeed = uTime * (2.0 / sqrt(aRadius)) * 0.15; float currentAngle = aAngle + orbitSpeed;
+                pos.x = cos(currentAngle) * aRadius; pos.z = sin(currentAngle) * aRadius; vec4 worldPos = modelMatrix * vec4(pos, 1.0);
+                float dist = distance(worldPos.xyz, uMouse); vDisruption = 0.0;
+                if(dist < 1.8) { float force = pow(max(1.8 - dist, 0.0), 2.0); pos.y += sin(aRadius * 20.0 + uTime * 4.0) * force * 0.1; pos.xz -= normalize(worldPos.xz - uMouse.xz) * force * 0.04; vDisruption = force * 0.3; }
+                vLocalPos = pos; vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0); gl_Position = projectionMatrix * mvPosition; gl_PointSize = (8.0 / -mvPosition.z) * (1.0 + vDisruption * 0.5);
+            }
+        `,
+        fragmentShader: `
+            varying float vRadius; varying float vDisruption; varying vec3 vLocalPos;
+            ${glslNoiseAndLighting}
+            void main() {
+                if(distance(gl_PointCoord, vec2(0.5)) > 0.5) discard;
+                float waves = sin(vRadius * 120.0 + fbm(vLocalPos * 3.5) * 4.0);
+                vec3 deepTeal = vec3(0.05, 0.32, 0.52); vec3 lightAzure = vec3(0.44, 0.77, 0.93); vec3 color = mix(deepTeal, lightAzure, smoothstep(-0.5, 0.5, waves));
+                vec3 radialNormal = normalize(vec3(vLocalPos.x, 0.2, vLocalPos.z)); float shadow = max(dot(radialNormal, lightDir), 0.3); color *= shadow;
+                if(vDisruption > 0.0) { color = mix(color, vec3(1.0, 1.0, 1.0), vDisruption * 0.5); }
+                float fade = smoothstep(1.75, 1.9, vRadius) * (1.0 - smoothstep(3.45, 3.65, vRadius)); gl_FragColor = vec4(color, fade * 0.5);
+            }
+        `
+    });
+    const ringSystem = new THREE.Points(ringGeometry, ringShaderMaterial);
+    planetarySystem.add(ringSystem);
+
+    const clock = new THREE.Clock();
+    const tick = () => {
+        const elapsed = clock.getElapsedTime();
+        mouse.x += (targetMouse.x - mouse.x) * 0.06; mouse.y += (targetMouse.y - mouse.y) * 0.06; mouse.z += (targetMouse.z - mouse.z) * 0.06;
+        planetShaderMaterial.uniforms.uTime.value = elapsed; planetShaderMaterial.uniforms.uMouse.value.copy(mouse);
+        ringShaderMaterial.uniforms.uTime.value = elapsed; ringShaderMaterial.uniforms.uMouse.value.copy(mouse);
+        nebulaMaterial.uniforms.uTime.value = elapsed; nebulaMaterial.uniforms.uMouse.value.copy(mouse);
+        planetBody.rotation.y = elapsed * 0.02; nebulaField.rotation.y = elapsed * 0.012; 
+        planetarySystem.rotation.y = -0.45 + (mouse.x * 0.04); planetarySystem.rotation.x = 0.38 + (mouse.y * 0.02);
+        starMaterial.opacity = 0.2 + Math.sin(elapsed * 2.0) * 0.08;
+        camera.position.x += (0 - camera.position.x) * 0.02; camera.position.y += (0 - camera.position.y) * 0.02; camera.position.z += (5.5 - camera.position.z) * 0.02;
+        renderer.render(scene, camera); window.requestAnimationFrame(tick);
+    };
+    tick();
+
+    window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        if(window.innerWidth > 1024) { planetarySystem.position.set(2.4, -0.2, -1.0); } else { planetarySystem.position.set(0.0, -1.5, -2.0); }
+    });
+
+    const serviceCatalog = {
+        eCommerce: {
+            title: "Advanced E-Commerce & Online Business Powerhouses",
+            label: "Active: 🛒 Digital E-Shops",
+            cards: [
+                { icon: "fa-store", name: "High-Volume Digital Storefronts", desc: "Slick, lightning-fast virtual shops engineered to process endless buyer orders without lagging or crashing during major traffic surges.", tag: "Built Strict in 1 Week" },
+                { icon: "fa-credit-card", name: "Armored Payment Checkouts", desc: "Secured transactional funnels that protect customer card details and safely deposit funds directly into your balance vaults.", tag: "Tested for 30 Full Days" },
+                { icon: "fa-box-open", name: "Live Stock & Inventory Trackers", desc: "Automated back-end systems that update your item inventory instantly the second an order clears, preventing duplicate selling errors.", tag: "Completely Managed Support" },
+                { icon: "fa-chart-pie", name: "Buyer Metrics Panels", desc: "Simple visual sales dashboards that highlight your most profitable items without requiring tedious spreadsheet inputting.", tag: "Engineered to Earn Revenue" }
+            ]
+        },
+        workflows: {
+            title: "Personal & Business Efficiency Control Systems",
+            label: "Active: ⚡ Personal Efficiency",
+            cards: [
+                { icon: "fa-clock", name: "Zero-Waste Flow Routines", desc: "Bespoke software interfaces that take over repetitive data handling, instantly giving you back hours of creative design freedom.", tag: "Strict 1-Week Blueprint Delivery" },
+                { icon: "fa-arrows-spin", name: "Interconnected App Bridges", desc: "Flawlessly links your operational apps so information transfers on autopilot, totally removing the risk of manual data errors.", tag: "Includes 1 Month Safety Diagnostics" },
+                { icon: "fa-users", name: "Smart Team Access Hubs", desc: "Protected, high-speed digital boardrooms that allow employees to sync assignments smoothly without overlapping tasks.", tag: "Tailored to Boost Work Output" },
+                { icon: "fa-cloud", name: "Unbreachable Resource Banks", desc: "Centralized workspace storage structures built to manage media files safely and keep them instantly retrievable on any device.", tag: "No Lag, Only Peak Performance" }
+            ]
+        },
+        management: {
+            title: "Total Architecture Protection & Lifetime Care",
+            label: "Active: ⚙️ Fully Managed Care",
+            cards: [
+                { icon: "fa-user-shield", name: "Dedicated Server Guardians", desc: "Our global technical architects monitor your code frameworks daily to keep your entire layout running smoothly.", tag: "Backed by Parent Network Power" },
+                { icon: "fa-rotate", name: "Instant Daily Data Snapshots", desc: "Automatic background safety rollbacks ensure that your shop configurations remain fully preserved against unforeseen network errors.", tag: "Zero Human Effort Required" },
+                { icon: "fa-gauge-high", name: "Speed Optimization Tune-Ups", desc: "Regular server adjustments keep your platform loading in milliseconds on phone and desktop browsers across the globe.", tag: "Maintained by Core Specialists" },
+                { icon: "fa-life-ring", name: "Priority Strategy Helpline", desc: "Direct access to our senior design consultants to update text layouts, add product collections, or modify your workflow rules.", tag: "Always Active, Never Delayed" }
+            ]
+        }
+    };
+
+    function renderServices(type) {
+        const data = serviceCatalog[type]; if (!data) return;
+        document.getElementById("servicesTitle").textContent = data.title;
+        document.getElementById("currentStackLabel").textContent = data.label;
+        const container = document.getElementById("servicesGridContainer"); if (!container) return;
+        container.innerHTML = ""; 
+
+        data.cards.forEach((card, index) => {
+            const cardElement = document.createElement("article");
+            cardElement.className = `service-card reveal-element reveal-up delay-${(index % 4) + 1}`;
+            cardElement.innerHTML = `
+                <div class="icon-lg"><i class="fas ${card.icon}" aria-hidden="true"></i></div>
+                <h3>${card.name}</h3>
+                <p>${card.desc}</p>
+                <div class="deal-tag"><i class="fas fa-check" aria-hidden="true"></i> ${card.tag}</div>
+            `;
+            container.appendChild(cardElement);
+            if (window.scrollObserver) { window.scrollObserver.observe(cardElement); }
+        });
+    }
+
+    document.querySelectorAll(".switcher-btn").forEach(button => {
+        button.addEventListener("click", function() {
+            document.querySelectorAll(".switcher-btn").forEach(btn => btn.classList.remove("active"));
+            this.classList.add("active");
+            renderServices(this.getAttribute("data-stack"));
+        });
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const observerOptions = { root: null, rootMargin: "0px", threshold: 0.15 };
+        window.scrollObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add("is-visible");
+                    observer.unobserve(entry.target); 
+                }
+            });
+        }, observerOptions);
+
+        const itemsToReveal = document.querySelectorAll(".reveal-element");
+        itemsToReveal.forEach(el => window.scrollObserver.observe(el));
+        renderServices("eCommerce");
+    });
+
+    const sections = document.querySelectorAll("section, header, footer");
+    const navItems = document.querySelectorAll(".nav-item");
+
+    window.addEventListener("scroll", () => {
+        let currentSectionId = "home";
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            if (pageYOffset >= sectionTop - 120) {
+                if(section.getAttribute("id")) { currentSectionId = section.getAttribute("id"); }
+            }
+        });
+        navItems.forEach(item => {
+            item.classList.remove("active");
+            if (item.getAttribute("href") === `#${currentSectionId}`) { item.classList.add("active"); }
+        });
+    });
+</script>
+</body>
+</html>
