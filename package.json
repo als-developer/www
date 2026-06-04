@@ -1,0 +1,23 @@
+{
+  "name": "ailifesolution-hosting",
+  "version": "1.0.0",
+  "description": "AILifeSolution - Real Business Systems | Automated Productivity",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "ailifesolution",
+    "business-systems",
+    "automation",
+    "ecommerce"
+  ],
+  "author": "AILifeSolution",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "compression": "^1.7.4",
+    "helmet": "^7.0.0"
+  }
+}
