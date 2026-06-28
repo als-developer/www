@@ -1,0 +1,187 @@
+:root {
+    --bg-primary: #040d17;
+    --bg-secondary: #061424;
+    --bg-glass: rgba(10,25,40,0.6);
+    --text-primary: #edf2f9;
+    --text-secondary: rgba(220,240,255,0.8);
+    --accent: #40a4d4;
+    --accent-hover: #2c8fc9;
+    --glass-border: rgba(64,164,212,0.25);
+    --radius: 32px;
+    --radius-sm: 12px;
+    --radius-lg: 20px;
+    --transition: 0.3s ease;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    min-height: 100vh;
+    scroll-behavior: smooth;
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { color: var(--accent-hover); }
+
+.container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.glass {
+    background: var(--bg-glass);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    padding: 2rem;
+}
+
+.glass-sm {
+    background: var(--bg-glass);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-sm);
+    padding: 1.2rem;
+}
+
+.btn-primary {
+    background: linear-gradient(105deg, #236b9e, #164f73);
+    border: 1px solid rgba(123,197,255,0.3);
+    padding: 0.9rem 2rem;
+    border-radius: 40px;
+    font-weight: 600;
+    color: white;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    cursor: pointer;
+    transition: var(--transition);
+    font-family: inherit;
+    font-size: 1rem;
+    border: none;
+}
+.btn-primary:hover {
+    background: var(--accent-hover);
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--accent);
+    padding: 0.9rem 1.8rem;
+    border-radius: 40px;
+    font-weight: 500;
+    color: #cae3ff;
+    cursor: pointer;
+    transition: var(--transition);
+    font-family: inherit;
+    font-size: 1rem;
+}
+.btn-secondary:hover {
+    background: rgba(64,164,212,0.1);
+    transform: translateY(-2px);
+}
+
+.btn-small {
+    background: rgba(64,164,212,0.15);
+    border: 1px solid rgba(64,164,212,0.5);
+    padding: 0.4rem 1.2rem;
+    border-radius: 40px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #c2e2ff;
+    cursor: pointer;
+    transition: var(--transition);
+    font-family: inherit;
+}
+.btn-small:hover { background: var(--accent); color: #fff; }
+
+.w-full { width: 100%; }
+.text-center { text-align: center; }
+.text-muted { color: var(--text-secondary); }
+.mb-1 { margin-bottom: 1rem; }
+.mb-2 { margin-bottom: 2rem; }
+.mt-1 { margin-top: 1rem; }
+.mt-2 { margin-top: 2rem; }
+.gap-1 { gap: 1rem; }
+.gap-2 { gap: 2rem; }
+.flex { display: flex; }
+.flex-wrap { flex-wrap: wrap; }
+.flex-center { display: flex; align-items: center; justify-content: center; }
+
+.form-group {
+    margin-bottom: 1rem;
+}
+.form-group label {
+    display: block;
+    font-size: 0.85rem;
+    color: #7cb8e0;
+    margin-bottom: 0.3rem;
+}
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 0.7rem 1rem;
+    border-radius: var(--radius-sm);
+    background: rgba(10,25,40,0.6);
+    border: 1px solid var(--glass-border);
+    color: #fff;
+    font-family: inherit;
+    font-size: 0.95rem;
+    transition: var(--transition);
+}
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(64,164,212,0.2);
+}
+.form-group textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+.form-group select option {
+    background: #040d17;
+}
+
+.toast {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background: rgba(4,12,22,0.95);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--accent);
+    border-radius: 16px;
+    padding: 1rem 1.8rem;
+    color: #fff;
+    font-size: 0.95rem;
+    z-index: 9999;
+    transform: translateY(100px);
+    opacity: 0;
+    transition: 0.4s ease;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+    max-width: 90%;
+}
+.toast.show {
+    transform: translateY(0);
+    opacity: 1;
+}
+.toast i {
+    color: #7bc5ff;
+    margin-right: 0.6rem;
+}
+
+@media (max-width: 768px) {
+    .container { padding: 0 1.25rem; }
+    .glass { padding: 1.5rem; }
+    .btn-primary, .btn-secondary { padding: 0.7rem 1.5rem; font-size: 0.9rem; }
+}
