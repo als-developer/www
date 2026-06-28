@@ -1,23 +1,23 @@
 {
-  "name": "ailifesolution-hosting",
-  "version": "1.0.0",
-  "description": "AILifeSolution - Real Business Systems | Automated Productivity",
+  "name": "ailifesolution-platform",
+  "version": "2.0.0",
+  "description": "AILifeSolution Enterprise Business Systems Platform",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "node server.js"
+    "dev": "nodemon server.js"
   },
-  "keywords": [
-    "ailifesolution",
-    "business-systems",
-    "automation",
-    "ecommerce"
-  ],
-  "author": "AILifeSolution",
-  "license": "MIT",
+  "engines": {
+    "node": "18.x"
+  },
   "dependencies": {
     "express": "^4.18.2",
-    "compression": "^1.7.4",
-    "helmet": "^7.0.0"
+    "cors": "^2.8.5",
+    "helmet": "^7.0.0",
+    "dotenv": "^16.0.3",
+    "jsonwebtoken": "^9.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
   }
 }
