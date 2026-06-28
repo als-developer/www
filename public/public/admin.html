@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin · AILifeSolution</title>
+    <link rel="icon" href="https://files.catbox.moe/6yf2rn.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #040d17;
+            --bg-secondary: #061424;
+            --bg-glass: rgba(10,25,40,0.6);
+            --text-primary: #edf2f9;
+            --text-secondary: rgba(220,240,255,0.8);
+            --accent: #40a4d4;
+            --accent-hover: #2c8fc9;
+            --glass-border: rgba(64,164,212,0.25);
+            --radius: 32px;
+            --radius-sm: 12px;
+            --radius-lg: 20px;
+            --transition: 0.3s ease;
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            scroll-behavior: smooth;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .btn-primary {
+            background: linear-gradient(105deg, #236b9e, #164f73);
+            border: 1px solid rgba(123,197,255,0.3);
+            padding: 0.7rem 1.5rem;
+            border-radius: 40px;
+            font-weight: 600;
+            color: white;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: inherit;
+            font-size: 0.95rem;
+            border: none;
+        }
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+        .btn-secondary {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--accent);
+            padding: 0.7rem 1.5rem;
+            border-radius: 40px;
+            font-weight: 500;
+            color: #cae3ff;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: inherit;
+            font-size: 0.95rem;
+        }
+        .btn-secondary:hover {
+            background: rgba(64,164,212,0.1);
+            transform: translateY(-2px);
+        }
+        .btn-danger {
+            background: rgba(220,50,50,0.2);
+            border: 1px solid rgba(220,50,50,0.3);
+            color: #ff6b6b;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: inherit;
+        }
+        .btn-danger:hover {
+            background: rgba(220,50,50,0.4);
+        }
+
+        .glass {
+            background: var(--bg-glass);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            padding: 2rem;
+        }
+
+        .form-group { margin-bottom: 1rem; }
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            color: #7cb8e0;
+            margin-bottom: 0.3rem;
+        }
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.7rem 1rem;
+            border-radius: var(--radius-sm);
+            background: rgba(10,25,40,0.6);
+            border: 1px solid var(--glass-border);
+            color: #fff;
+            font-family: inherit;
+            font-size: 0.95rem;
+            transition: var(--transition);
+        }
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(64,164,212,0.2);
+        }
+        .form-group textarea { min-height: 100px; resize: vertical; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: rgba(4,12,22,0.95);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--accent);
+            border-radius: 16px;
+            padding: 1rem 1.8rem;
+            color: #fff;
+            font-size: 0.95rem;
+            z-index: 9999;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: 0.4s ease;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+            max-width: 90%;
+        }
+        .toast.show { transform: translateY(0); opacity: 1; }
+        .toast i { color: #7bc5ff; margin-right: 0.6rem; }
+
+        .text-muted { color: var(--text-secondary); }
+        .text-center { text-align: center; }
+
+        .login-page {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: var(--bg-primary);
+        }
+        .login-box { max-width: 400px; width: 100%; padding: 2.5rem; }
+        .login-box .logo { text-align: center; margin-bottom: 2rem; }
+        .login-box .logo img { height: 48px; }
+        .login-box .logo span {
+            display: block;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-top: 0.5rem;
+            background: linear-gradient(135deg, #fff 40%, #cce7ff 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .login-box .logo p { color: var(--text-secondary); font-size: 0.85rem; margin-top: 0.3rem; }
+
+        .admin-sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 240px;
+            background: rgba(4,12,22,0.98);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid var(--glass-border);
+            padding: 1.5rem 1rem;
+            overflow-y: auto;
+            z-index: 100;
+            transition: transform 0.3s ease;
+        }
+        .admin-sidebar .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        .admin-sidebar .brand img { height: 32px; }
+        .admin-sidebar .brand span { font-size: 1.1rem; font-weight: 700; color: #fff; }
+        .admin-sidebar .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.7rem 1rem;
+            border-radius: 10px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition);
+            margin-bottom: 0.2rem;
+            border: none;
+            background: transparent;
+            width: 100%;
+            font-family: inherit;
+            font-size: 0.95rem;
+        }
+        .admin-sidebar .nav-item:hover,
+        .admin-sidebar .nav-item.active {
+            background: rgba(64,164,212,0.12);
+            color: #fff;
+        }
+        .admin-sidebar .nav-item i { width: 20px; text-align: center; }
+
+        .admin-main {
+            margin-left: 260px;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .admin-header h1 { font-size: 1.8rem; }
+        .admin-header .user-info {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .admin-section { display: none; }
+        .admin-section.active { display: block; }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .stat-box {
+            background: rgba(8,25,40,0.6);
+            border-radius: var(--radius-sm);
+            padding: 1.2rem;
+            border: 1px solid var(--glass-border);
+            text-align: center;
+        }
+        .stat-box .number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #7bc5ff;
+        }
+        .stat-box .label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .post-form-container {
+            background: rgba(8,25,40,0.6);
+            border-radius: var(--radius-sm);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--glass-border);
+        }
+        .post-item {
+            background: rgba(8,25,40,0.4);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 0.8rem;
+            border: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+        .post-item .post-info { flex: 1; min-width: 150px; }
+        .post-item .post-info h4 { font-size: 0.95rem; margin-bottom: 0.2rem; }
+        .post-item .post-info .meta {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+        .post-item .post-actions { display: flex; gap: 0.5rem; }
+        .post-item .post-actions button {
+            padding: 0.3rem 0.8rem;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: var(--transition);
+        }
+        .post-item .post-actions .edit-btn {
+            background: rgba(64,164,212,0.2);
+            color: #7bc5ff;
+        }
+        .post-item .post-actions .edit-btn:hover {
+            background: rgba(64,164,212,0.4);
+        }
+        .post-item .post-actions .delete-btn {
+            background: rgba(220,50,50,0.2);
+            color: #ff6b6b;
+        }
+        .post-item .post-actions .delete-btn:hover {
+            background: rgba(220,50,50,0.4);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+        }
+        .empty-state i { font-size: 3rem; color: var(--glass-border); margin-bottom: 1rem; }
+
+        .contact-item {
+            background: rgba(8,25,40,0.4);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 0.8rem;
+            border: 1px solid var(--glass-border);
+        }
+        .contact-item .contact-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .contact-item .contact-header .status {
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        .contact-item .contact-header .status.unread {
+            background: rgba(220,50,50,0.3);
+            color: #ff6b6b;
+        }
+        .contact-item .contact-header .status.read {
+            background: rgba(64,164,212,0.3);
+            color: #7bc5ff;
+        }
+        .contact-item .contact-header .status.replied {
+            background: rgba(50,220,50,0.3);
+            color: #6bff6b;
+        }
+        .contact-item .contact-body {
+            margin: 0.5rem 0;
+            color: var(--text-secondary);
+        }
+        .contact-item .contact-reply {
+            background: rgba(10,25,40,0.6);
+            border-radius: 8px;
+            padding: 0.8rem;
+            margin-top: 0.5rem;
+            border-left: 3px solid var(--accent);
+        }
+        .contact-item .contact-reply textarea {
+            width: 100%;
+            padding: 0.5rem;
+            border-radius: 6px;
+            background: rgba(10,25,40,0.6);
+            border: 1px solid var(--glass-border);
+            color: #fff;
+            font-family: inherit;
+            font-size: 0.9rem;
+            resize: vertical;
+            min-height: 60px;
+        }
+        .contact-item .contact-reply textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        .contact-item .contact-reply .reply-btn {
+            margin-top: 0.5rem;
+            padding: 0.4rem 1.2rem;
+            border-radius: 6px;
+            background: var(--accent);
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .contact-item .contact-reply .reply-btn:hover {
+            background: var(--accent-hover);
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 0.8rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+        .toolbar select {
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            background: rgba(10,25,40,0.6);
+            border: 1px solid var(--glass-border);
+            color: #fff;
+            font-family: inherit;
+        }
+
+        .admin-sidebar-toggle {
+            display: none;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 101;
+            background: rgba(4,12,22,0.9);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 0.5rem 0.8rem;
+            color: #fff;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+        .admin-sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 99;
+        }
+        .admin-sidebar-overlay.show { display: block; }
+
+        @media (max-width: 768px) {
+            .admin-sidebar {
+                transform: translateX(-100%);
+                width: 280px;
+            }
+            .admin-sidebar.open { transform: translateX(0); }
+            .admin-main { margin-left: 0; padding: 1rem; }
+            .form-row { grid-template-columns: 1fr; }
+            .admin-sidebar-toggle { display: block !important; }
+            .admin-sidebar-overlay.show { display: block; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ===== LOGIN PAGE ===== -->
+<div id="login-page" class="login-page">
+    <div class="login-box glass">
+        <div class="logo">
+            <img src="https://files.catbox.moe/6yf2rn.png" alt="AILifeSolution">
+            <span>AILifeSolution</span>
+            <p>Admin Panel</p>
+            <p style="font-size:0.7rem; color:var(--text-secondary); margin-top:0.3rem; opacity:0.6;">
+                Default: admin / ailifesolution.lexurer
+            </p>
+        </div>
+        <form id="login-form" onsubmit="adminLogin(event)">
+            <div class="form-group">
+                <label><i class="fas fa-user"></i> Username</label>
+                <input type="text" id="login-username" placeholder="Enter username" required>
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-lock"></i> Password</label>
+                <input type="password" id="login-password" placeholder="Enter password" required>
+            </div>
+            <button type="submit" class="btn-primary" style="width:100%; justify-content:center;">
+                <i class="fas fa-sign-in-alt"></i> Login
+            </button>
+            <div id="login-error" style="color:#ff6b6b; text-align:center; margin-top:0.8rem; display:none;"></div>
+        </form>
+    </div>
+</div>
+
+<!-- ===== ADMIN DASHBOARD ===== -->
+<div id="admin-content" style="display:none;">
+    <button class="admin-sidebar-toggle" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+    <div class="admin-sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+    <div class="admin-sidebar" id="admin-sidebar">
+        <div class="brand">
+            <img src="https://files.catbox.moe/6yf2rn.png" alt="ALS">
+            <span>AILifeSolution</span>
+        </div>
+        <button class="nav-item active" onclick="showAdminSection('dashboard')">
+            <i class="fas fa-chart-pie"></i> Dashboard
+        </button>
+        <button class="nav-item" onclick="showAdminSection('posts')">
+            <i class="fas fa-newspaper"></i> Posts
+        </button>
+        <button class="nav-item" onclick="showAdminSection('contacts')">
+            <i class="fas fa-envelope"></i> Contacts
+        </button>
+        <button class="nav-item" onclick="showAdminSection('ai-sessions')">
+            <i class="fas fa-robot"></i> AI Sessions
+        </button>
+        <button class="nav-item" onclick="showAdminSection('analytics')">
+            <i class="fas fa-chart-line"></i> Analytics
+        </button>
+        <button class="nav-item" onclick="adminLogout()" style="margin-top:2rem; border-top:1px solid var(--glass-border); padding-top:1rem;">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+    </div>
+
+    <div class="admin-main">
+        <div class="admin-header">
+            <h1>Admin Dashboard</h1>
+            <div class="user-info">
+                <i class="fas fa-user-circle"></i> Admin · <span id="admin-time"></span>
+            </div>
+        </div>
+
+        <!-- ===== DASHBOARD ===== -->
+        <div id="section-dashboard" class="admin-section active">
+            <div class="stats-grid" id="stats-grid">
+                <div class="stat-box">
+                    <div class="number" id="stat-posts">0</div>
+                    <div class="label">Total Posts</div>
+                </div>
+                <div class="stat-box">
+                    <div class="number" id="stat-views">0</div>
+                    <div class="label">Post Views</div>
+                </div>
+                <div class="stat-box">
+                    <div class="number" id="stat-visitors">0</div>
+                    <div class="label">Visitors</div>
+                </div>
+                <div class="stat-box">
+                    <div class="number" id="stat-today">0</div>
+                    <div class="label">Today</div>
+                </div>
+                <div class="stat-box">
+                    <div class="number" id="stat-contacts">0</div>
+                    <div class="label">Contacts</div>
+                </div>
+                <div class="stat-box">
+                    <div class="number" id="stat-unread">0</div>
+                    <div class="label">Unread</div>
+                </div>
+            </div>
+            <div class="glass" style="padding:1.5rem;">
+                <h3>Recent Activity</h3>
+                <div id="recent-activity">
+                    <div class="text-muted text-center" style="padding:1rem;">Loading activity...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== POSTS ===== -->
+        <div id="section-posts" class="admin-section">
+            <h3 style="margin-bottom:1rem;">Manage Posts</h3>
+            <div class="post-form-container">
+                <h4 id="post-form-title"><i class="fas fa-plus"></i> Create New Post</h4>
+                <form id="post-form" onsubmit="submitPost(event)">
+                    <input type="hidden" id="post-edit-id" value="">
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" id="post-title" placeholder="Post title" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Type</label>
+                            <select id="post-type">
+                                <option value="text">Text Only</option>
+                                <option value="image">Image + Text</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="image-url-group">
+                            <label>Image URL</label>
+                            <input type="text" id="post-image" placeholder="https://example.com/image.jpg">
+                        </div>
+                    </div>
+                    <div class="form-group" id="caption-group">
+                        <label>Image Caption</label>
+                        <input type="text" id="post-caption" placeholder="Image caption (optional)">
+                    </div>
+                    <div class="form-group">
+                        <label>Content</label>
+                        <textarea id="post-content" placeholder="Write your post content..." rows="5" required></textarea>
+                    </div>
+                    <div style="display:flex; gap:0.8rem; flex-wrap:wrap;">
+                        <button type="submit" class="btn-primary"><i class="fas fa-save"></i> <span id="post-submit-text">Publish Post</span></button>
+                        <button type="button" class="btn-secondary" onclick="resetPostForm()"><i class="fas fa-times"></i> Cancel</button>
+                    </div>
+                </form>
+            </div>
+            <div id="posts-list">
+                <div class="text-muted text-center" style="padding:1rem;">Loading posts...</div>
+            </div>
+        </div>
+
+        <!-- ===== CONTACTS ===== -->
+        <div id="section-contacts" class="admin-section">
+            <h3 style="margin-bottom:1rem;">Contact Messages</h3>
+            <div class="toolbar">
+                <select id="contact-filter" onchange="loadContacts()">
+                    <option value="all">All Messages</option>
+                    <option value="unread">Unread</option>
+                    <option value="read">Read</option>
+                    <option value="replied">Replied</option>
+                </select>
+                <button class="btn-danger" onclick="deleteSelectedContacts()" style="padding:0.4rem 1rem; font-size:0.85rem;">
+                    <i class="fas fa-trash"></i> Delete Selected
+                </button>
+            </div>
+            <div id="contacts-list">
+                <div class="text-muted text-center" style="padding:1rem;">Loading contacts...</div>
+            </div>
+        </div>
+
+        <!-- ===== AI SESSIONS ===== -->
+        <div id="section-ai-sessions" class="admin-section">
+            <h3 style="margin-bottom:1rem;">AI Chat Sessions</h3>
+            <div id="ai-sessions-list">
+                <div class="text-muted text-center" style="padding:1rem;">Loading AI sessions...</div>
+            </div>
+        </div>
+
+        <!-- ===== ANALYTICS ===== -->
+        <div id="section-analytics" class="admin-section">
+            <h3 style="margin-bottom:1rem;">Analytics</h3>
+            <div class="glass" style="padding:1.5rem;">
+                <h4>Visitor Statistics</h4>
+                <div id="analytics-data">
+                    <div class="text-muted text-center" style="padding:1rem;">Loading analytics...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== TOAST ===== -->
+<div id="toast" class="toast"><i class="fas fa-info-circle"></i> <span id="toastMessage">Ready</span></div>
+
+<script>
+    // =============================================
+    // ===== ADMIN SYSTEM =====
+    // =============================================
+    
+    let isLoggedIn = false;
+    let currentSection = 'dashboard';
+    let authToken = null;
+
+    // ===== LOGIN =====
+    async function adminLogin(event) {
+        event.preventDefault();
+        const username = document.getElementById('login-username').value;
+        const password = document.getElementById('login-password').value;
+        const errorEl = document.getElementById('login-error');
+
+        try {
+            console.log('🔐 Login attempt:', { username });
+            const response = await fetch('/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+
+            const data = await response.json();
+            console.log('📡 Login response:', data);
+
+            if (data.success) {
+                authToken = data.token;
+                localStorage.setItem('authToken', authToken);
+                isLoggedIn = true;
+                document.getElementById('login-page').style.display = 'none';
+                document.getElementById('admin-content').style.display = 'block';
+                loadDashboard();
+                startClock();
+                showToast('Welcome back, Admin');
+            } else {
+                errorEl.textContent = 'Invalid username or password';
+                errorEl.style.display = 'block';
+            }
+        } catch (error) {
+            console.error('❌ Login error:', error);
+            errorEl.textContent = 'Login failed. Please try again.';
+            errorEl.style.display = 'block';
+        }
+    }
+
+    async function adminLogout() {
+        try {
+            await fetch('/api/logout', { method: 'POST' });
+        } catch (error) {}
+        isLoggedIn = false;
+        authToken = null;
+        localStorage.removeItem('authToken');
+        document.getElementById('login-page').style.display = 'flex';
+        document.getElementById('admin-content').style.display = 'none';
+        showToast('Logged out successfully');
+    }
+
+    // ===== NAVIGATION =====
+    function showAdminSection(section) {
+        currentSection = section;
+        document.querySelectorAll('.admin-section').forEach(el => el.classList.remove('active'));
+        document.getElementById('section-' + section).classList.add('active');
+        document.querySelectorAll('.admin-sidebar .nav-item').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.admin-sidebar .nav-item').forEach(el => {
+            if (el.textContent.trim().toLowerCase().includes(section)) {
+                el.classList.add('active');
+            }
+        });
+        if (section === 'dashboard') loadDashboard();
+        if (section === 'posts') loadPosts();
+        if (section === 'contacts') loadContacts();
+        if (section === 'ai-sessions') loadAISessions();
+        if (section === 'analytics') loadAnalytics();
+        if (window.innerWidth <= 768) toggleSidebar(false);
+    }
+
+    function toggleSidebar(forceState) {
+        const sidebar = document.getElementById('admin-sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        if (forceState === false) {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('show');
+        } else {
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('show');
+        }
+    }
+
+    // ===== DASHBOARD =====
+    async function loadDashboard() {
+        try {
+            console.log('📊 Loading dashboard...');
+            const response = await fetch('/api/admin/stats');
+            const data = await response.json();
+            console.log('📊 Dashboard data:', data);
+            
+            document.getElementById('stat-posts').textContent = data.totalPosts || 0;
+            document.getElementById('stat-views').textContent = data.totalViews || 0;
+            document.getElementById('stat-visitors').textContent = data.totalVisitors || 0;
+            document.getElementById('stat-today').textContent = data.todayVisitors || 0;
+            document.getElementById('stat-contacts').textContent = data.totalContacts || 0;
+            document.getElementById('stat-unread').textContent = data.unreadContacts || 0;
+
+            const activityEl = document.getElementById('recent-activity');
+            if (data.recentContacts && data.recentContacts.length > 0) {
+                activityEl.innerHTML = data.recentContacts.slice(0, 5).map(c => {
+                    return '<div style="padding:0.5rem 0; border-bottom:1px solid var(--glass-border); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">' +
+                        '<div><strong>' + c.name + '</strong> <span style="color:var(--text-secondary); font-size:0.85rem;">' + (c.message.substring(0, 50) + (c.message.length > 50 ? '...' : '')) + '</span></div>' +
+                        '<span style="font-size:0.75rem; color:var(--text-secondary);">' + new Date(c.timestamp).toLocaleDateString() + '</span>' +
+                    '</div>';
+                }).join('');
+            } else {
+                activityEl.innerHTML = '<div class="text-muted text-center">No recent activity</div>';
+            }
+        } catch (error) {
+            console.error('❌ Failed to load dashboard:', error);
+        }
+    }
+
+    // =============================================
+    // ===== POSTS - ILIYOREKEBISHWA =====
+    // =============================================
+    async function loadPosts() {
+        const container = document.getElementById('posts-list');
+        try {
+            console.log('📚 Loading posts in admin...');
+            const response = await fetch('/api/posts');
+            console.log('📡 Response status:', response.status);
+            const posts = await response.json();
+            console.log('📚 Posts found:', posts.length);
+            
+            if (!posts || posts.length === 0) {
+                container.innerHTML = '<div class="empty-state"><i class="fas fa-newspaper"></i><p>No posts yet. Create your first post</p></div>';
+                return;
+            }
+
+            container.innerHTML = posts.map(post => {
+                return '<div class="post-item">' +
+                    '<div class="post-info">' +
+                        '<h4>' + post.title + '</h4>' +
+                        '<div class="meta">' +
+                            (post.type === 'image' ? '<i class="fas fa-image"></i> Image · ' : '') +
+                            new Date(post.timestamp).toLocaleDateString() + ' · by ' + (post.author || 'Admin') +
+                            (post.image ? ' · <a href="' + post.image + '" target="_blank" style="color:#7bc5ff;">View Image</a>' : '') +
+                            '<span style="margin-left:0.5rem;"><i class="fas fa-eye"></i> ' + (post.views || 0) + '</span>' +
+                            '<span style="margin-left:0.5rem;"><i class="fas fa-heart"></i> ' + (post.likes || 0) + '</span>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="post-actions">' +
+                        '<button class="edit-btn" onclick="editPost(\'' + post.id + '\')"><i class="fas fa-edit"></i> Edit</button>' +
+                        '<button class="delete-btn" onclick="deletePost(\'' + post.id + '\')"><i class="fas fa-trash"></i></button>' +
+                    '</div>' +
+                '</div>';
+            }).join('');
+            console.log('✅ Posts rendered in admin');
+        } catch (error) {
+            console.error('❌ Failed to load posts:', error);
+            container.innerHTML = '<div class="text-muted text-center">Failed to load posts</div>';
+        }
+    }
+
+    // ===== SUBMIT POST - ILIYOREKEBISHWA =====
+    async function submitPost(event) {
+        event.preventDefault();
+        const id = document.getElementById('post-edit-id').value;
+        const title = document.getElementById('post-title').value;
+        const content = document.getElementById('post-content').value;
+        const type = document.getElementById('post-type').value;
+        const image = document.getElementById('post-image').value;
+        const caption = document.getElementById('post-caption').value;
+
+        const method = id ? 'PUT' : 'POST';
+        const url = id ? '/api/posts/' + id : '/api/posts';
+
+        try {
+            console.log('📝 Submitting post:', { title, content, type, id });
+            const response = await fetch(url, {
+                method: method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title, content, type, image, caption })
+            });
+
+            const data = await response.json();
+            console.log('📝 Response:', data);
+
+            if (response.ok) {
+                showToast(id ? 'Post updated successfully' : 'Post published successfully');
+                resetPostForm();
+                loadPosts();
+                loadDashboard();
+                // Refresh home page if open
+                if (window.opener) {
+                    window.opener.postMessage('refreshPosts', '*');
+                }
+            } else {
+                showToast('Failed to save post: ' + (data.details || data.error || 'Unknown error'));
+            }
+        } catch (error) {
+            console.error('❌ Error saving post:', error);
+            showToast('Error saving post: ' + error.message);
+        }
+    }
+
+    // ===== EDIT POST =====
+    function editPost(id) {
+        console.log('✏️ Editing post:', id);
+        fetch('/api/posts/' + id)
+            .then(res => {
+                if (!res.ok) throw new Error('Post not found');
+                return res.json();
+            })
+            .then(post => {
+                document.getElementById('post-edit-id').value = id;
+                document.getElementById('post-title').value = post.title;
+                document.getElementById('post-content').value = post.content;
+                document.getElementById('post-type').value = post.type || 'text';
+                document.getElementById('post-image').value = post.image || '';
+                document.getElementById('post-caption').value = post.caption || '';
+                document.getElementById('post-form-title').innerHTML = '<i class="fas fa-edit"></i> Edit Post';
+                document.getElementById('post-submit-text').textContent = 'Update Post';
+                document.getElementById('post-form').scrollIntoView({ behavior: 'smooth' });
+                togglePostFields(post.type || 'text');
+            })
+            .catch((err) => {
+                console.error('❌ Failed to load post:', err);
+                showToast('Failed to load post');
+            });
+    }
+
+    // ===== DELETE POST =====
+    async function deletePost(id) {
+        if (!confirm('Are you sure you want to delete this post?')) return;
+        try {
+            console.log('🗑️ Deleting post:', id);
+            const response = await fetch('/api/posts/' + id, { method: 'DELETE' });
+            if (response.ok) {
+                showToast('Post deleted successfully');
+                loadPosts();
+                loadDashboard();
+            } else {
+                const data = await response.json();
+                showToast('Failed to delete post: ' + (data.error || 'Unknown error'));
+            }
+        } catch (error) {
+            console.error('❌ Error deleting post:', error);
+            showToast('Failed to delete post');
+        }
+    }
+
+    // ===== RESET POST FORM =====
+    function resetPostForm() {
+        document.getElementById('post-edit-id').value = '';
+        document.getElementById('post-title').value = '';
+        document.getElementById('post-content').value = '';
+        document.getElementById('post-type').value = 'text';
+        document.getElementById('post-image').value = '';
+        document.getElementById('post-caption').value = '';
+        document.getElementById('post-form-title').innerHTML = '<i class="fas fa-plus"></i> Create New Post';
+        document.getElementById('post-submit-text').textContent = 'Publish Post';
+        togglePostFields('text');
+    }
+
+    function togglePostFields(type) {
+        const imageGroup = document.getElementById('image-url-group');
+        const captionGroup = document.getElementById('caption-group');
+        if (type === 'image') {
+            imageGroup.style.display = 'block';
+            captionGroup.style.display = 'block';
+        } else {
+            imageGroup.style.display = 'none';
+            captionGroup.style.display = 'none';
+        }
+    }
+
+    document.getElementById('post-type').addEventListener('change', function() {
+        togglePostFields(this.value);
+    });
+    togglePostFields('text');
+
+    // ===== CONTACTS =====
+    async function loadContacts() {
+        const container = document.getElementById('contacts-list');
+        const filter = document.getElementById('contact-filter').value;
+        try {
+            console.log('📚 Loading contacts...');
+            const response = await fetch('/api/admin/contacts?status=' + filter);
+            const data = await response.json();
+            
+            if (!data.contacts || data.contacts.length === 0) {
+                container.innerHTML = '<div class="empty-state"><i class="fas fa-envelope"></i><p>No contact messages found</p></div>';
+                return;
+            }
+
+            container.innerHTML = data.contacts.map(contact => {
+                return '<div class="contact-item" data-id="' + contact.id + '">' +
+                    '<div class="contact-header">' +
+                        '<div>' +
+                            '<strong>' + contact.name + '</strong>' +
+                            (contact.email ? '<a href="mailto:' + contact.email + '" style="color:#7bc5ff; margin-left:0.5rem;">' + contact.email + '</a>' : '') +
+                            (contact.phone ? '<span style="color:var(--text-secondary); margin-left:0.5rem;">' + contact.phone + '</span>' : '') +
+                        '</div>' +
+                        '<div>' +
+                            '<span class="status ' + (contact.status || 'unread') + '">' + (contact.status || 'unread') + '</span>' +
+                            '<span style="font-size:0.75rem; color:var(--text-secondary); margin-left:0.5rem;">' + new Date(contact.timestamp).toLocaleString() + '</span>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="contact-body">' + contact.message + '</div>' +
+                    (contact.reply ? '<div class="contact-reply"><strong>Reply:</strong> ' + contact.reply + '</div>' : '') +
+                    '<div class="contact-reply" style="margin-top:0.5rem;">' +
+                        '<textarea id="reply-' + contact.id + '" placeholder="Write a reply..." rows="2"></textarea>' +
+                        '<button class="reply-btn" onclick="replyToContact(\'' + contact.id + '\')"><i class="fas fa-reply"></i> Send Reply</button>' +
+                        '<button class="reply-btn" onclick="markContactRead(\'' + contact.id + '\')" style="background:rgba(64,164,212,0.3); margin-left:0.5rem;"><i class="fas fa-check"></i> Mark Read</button>' +
+                    '</div>' +
+                '</div>';
+            }).join('');
+        } catch (error) {
+            console.error('❌ Failed to load contacts:', error);
+            container.innerHTML = '<div class="text-muted text-center">Failed to load contacts</div>';
+        }
+    }
+
+    async function replyToContact(id) {
+        const reply = document.getElementById('reply-' + id).value.trim();
+        if (!reply) {
+            showToast('Please enter a reply');
+            return;
+        }
+        try {
+            console.log('📝 Replying to contact:', id);
+            const response = await fetch('/api/contact/' + id, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: 'replied', reply: reply })
+            });
+            if (response.ok) {
+                showToast('Reply sent successfully');
+                loadContacts();
+                loadDashboard();
+            }
+        } catch (error) {
+            console.error('❌ Failed to send reply:', error);
+            showToast('Failed to send reply');
+        }
+    }
+
+    async function markContactRead(id) {
+        try {
+            console.log('📝 Marking contact as read:', id);
+            const response = await fetch('/api/contact/' + id, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: 'read' })
+            });
+            if (response.ok) {
+                showToast('Marked as read');
+                loadContacts();
+                loadDashboard();
+            }
+        } catch (error) {
+            console.error('❌ Failed to update status:', error);
+            showToast('Failed to update status');
+        }
+    }
+
+    async function deleteSelectedContacts() {
+        const checked = document.querySelectorAll('.contact-item input[type="checkbox"]:checked');
+        if (checked.length === 0) {
+            showToast('Select contacts to delete');
+            return;
+        }
+        if (!confirm('Delete ' + checked.length + ' contact(s)?')) return;
+        
+        const ids = Array.from(checked).map(el => el.closest('.contact-item').dataset.id);
+        try {
+            console.log('🗑️ Deleting contacts:', ids);
+            const response = await fetch('/api/admin/contacts/batch', {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ids: ids })
+            });
+            if (response.ok) {
+                showToast(ids.length + ' contact(s) deleted');
+                loadContacts();
+                loadDashboard();
+            }
+        } catch (error) {
+            console.error('❌ Failed to delete contacts:', error);
+            showToast('Failed to delete contacts');
+        }
+    }
+
+    // ===== AI SESSIONS =====
+    async function loadAISessions() {
+        const container = document.getElementById('ai-sessions-list');
+        try {
+            console.log('🤖 Loading AI sessions...');
+            const response = await fetch('/api/ai/sessions');
+            const sessions = await response.json();
+            
+            if (!sessions || sessions.length === 0) {
+                container.innerHTML = '<div class="empty-state"><i class="fas fa-robot"></i><p>No AI chat sessions found</p></div>';
+                return;
+            }
+
+            container.innerHTML = sessions.map(session => {
+                return '<div class="post-item">' +
+                    '<div class="post-info">' +
+                        '<h4><i class="fas fa-robot" style="color:#7bc5ff;"></i> Session ' + session.id.substring(0, 8) + '</h4>' +
+                        '<div class="meta">' +
+                            (session.messageCount || 0) + ' messages · Last activity: ' + new Date(session.updatedAt).toLocaleString() +
+                            (session.preview ? ' · "' + session.preview + '..."' : '') +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="post-actions">' +
+                        '<button onclick="viewAISession(\'' + session.id + '\')" class="edit-btn"><i class="fas fa-eye"></i> View</button>' +
+                        '<button onclick="deleteAISession(\'' + session.id + '\')" class="delete-btn"><i class="fas fa-trash"></i></button>' +
+                    '</div>' +
+                '</div>';
+            }).join('');
+        } catch (error) {
+            console.error('❌ Failed to load AI sessions:', error);
+            container.innerHTML = '<div class="text-muted text-center">Failed to load AI sessions</div>';
+        }
+    }
+
+    async function deleteAISession(id) {
+        if (!confirm('Delete this AI chat session?')) return;
+        try {
+            console.log('🗑️ Deleting AI session:', id);
+            const response = await fetch('/api/ai/chat/' + id, { method: 'DELETE' });
+            if (response.ok) {
+                showToast('AI session deleted');
+                loadAISessions();
+            }
+        } catch (error) {
+            console.error('❌ Failed to delete session:', error);
+            showToast('Failed to delete session');
+        }
+    }
+
+    function viewAISession(id) {
+        window.open('/ai?session=' + id, '_blank');
+    }
+
+    // ===== ANALYTICS =====
+    async function loadAnalytics() {
+        const container = document.getElementById('analytics-data');
+        try {
+            console.log('📊 Loading analytics...');
+            const response = await fetch('/api/analytics/visitors');
+            const data = await response.json();
+            
+            container.innerHTML = 
+                '<div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(150px,1fr)); gap:1rem; margin-top:1rem;">' +
+                    '<div class="stat-box"><div class="number">' + (data.total || 0) + '</div><div class="label">Total Visitors</div></div>' +
+                    '<div class="stat-box"><div class="number">' + (data.today || 0) + '</div><div class="label">Today</div></div>' +
+                '</div>' +
+                '<div style="margin-top:1.5rem;">' +
+                    '<h4 style="color:#7bc5ff;">Page Views</h4>' +
+                    (data.pageViews ? Object.keys(data.pageViews).map(page => {
+                        return '<div style="display:flex; justify-content:space-between; padding:0.3rem 0; border-bottom:1px solid var(--glass-border);">' +
+                            '<span>/' + page + '</span>' +
+                            '<span style="color:#7bc5ff;">' + data.pageViews[page] + '</span>' +
+                        '</div>';
+                    }).join('') : '<div class="text-muted">No page view data</div>') +
+                '</div>';
+        } catch (error) {
+            console.error('❌ Failed to load analytics:', error);
+            container.innerHTML = '<div class="text-muted text-center">Failed to load analytics</div>';
+        }
+    }
+
+    // ===== CLOCK =====
+    function startClock() {
+        setInterval(function() {
+            document.getElementById('admin-time').textContent = new Date().toLocaleString();
+        }, 1000);
+    }
+
+    // ===== CHECK AUTH =====
+    async function checkAuth() {
+        try {
+            const token = localStorage.getItem('authToken');
+            if (!token) return;
+            
+            const response = await fetch('/api/verify', {
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+            
+            if (response.ok) {
+                isLoggedIn = true;
+                authToken = token;
+                document.getElementById('login-page').style.display = 'none';
+                document.getElementById('admin-content').style.display = 'block';
+                loadDashboard();
+                startClock();
+                console.log('✅ Auth verified');
+            } else {
+                console.warn('⚠️ Auth failed, clearing token');
+                localStorage.removeItem('authToken');
+            }
+        } catch (error) {
+            console.error('❌ Auth check failed:', error);
+        }
+    }
+
+    // ===== TOAST =====
+    function showToast(message) {
+        const toast = document.getElementById('toast');
+        const toastMsg = document.getElementById('toastMessage');
+        toastMsg.textContent = message;
+        toast.classList.add('show');
+        clearTimeout(window.toastTimeout);
+        window.toastTimeout = setTimeout(function() {
+            toast.classList.remove('show');
+        }, 3000);
+    }
+
+    // ===== INIT =====
+    checkAuth();
+
+    window.addEventListener('resize', function() {
+        if (window.innerWidth > 768) {
+            document.getElementById('admin-sidebar').classList.remove('open');
+            document.getElementById('sidebar-overlay').classList.remove('show');
+        }
+    });
+</script>
+</body>
+</html>
