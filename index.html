@@ -3,841 +3,908 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>AILifeSolution · Real Business Systems | Automated Productivity</title>
-    
-    <!-- EXACT FAVICON INTEGRATION -->
+    <title>AILifeSolution · Enterprise Business Systems</title>
     <link rel="icon" href="https://files.catbox.moe/6yf2rn.png" type="image/png">
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg-gradient: radial-gradient(circle at 20% 30%, #061424 0%, #040d17 70%, #010408 100%);
-            --text-main: #edf2f9;
-            --text-muted: rgba(220, 240, 255, 0.8);
-            --accent-blue: #40a4d4;
-            --accent-glow: #2c8fc9;
-            --glass-bg: rgba(6, 18, 30, 0.75);
-            --card-bg: rgba(10, 25, 40, 0.45);
-            --border-glow: rgba(64, 164, 212, 0.25);
-            --transition-speed: 0.25s;
-
-            --container-max-width: 1280px;
-            --container-padding-pc: 2rem;
-            --container-padding-mobile: 1.25rem;
-            
-            --section-padding: clamp(3rem, 6vw, 6rem);
-            --hero-padding: clamp(2rem, 5vw, 4rem);
-            --hero-card-padding: clamp(1.5rem, 4vw, 3.5rem);
-            --card-padding: clamp(1.5rem, 3vw, 2.5rem);
-            
-            --services-grid-min-width: minmax(min(100%, 290px), 1fr);
-            --expert-grid-min-width: minmax(min(100%, 220px), 1fr);
-            --footer-grid-min-width: minmax(min(100%, 200px), 1fr);
-            --layout-gap: clamp(1.25rem, 3vw, 2rem);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin:0; padding:0; box-sizing:border-box; }
         body {
             font-family: 'Inter', sans-serif;
-            background: var(--bg-gradient);
-            color: var(--text-main);
+            background: #040d17;
+            color: #edf2f9;
             scroll-behavior: smooth;
             line-height: 1.6;
             overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+        }
+        :root {
+            --accent: #40a4d4;
+            --glass: rgba(6,18,30,0.75);
+            --border: rgba(64,164,212,0.25);
         }
 
-        .reveal-element {
-            opacity: 0;
-            will-change: transform, opacity;
-            transition: transform 0.8s cubic-bezier(0.215, 0.61, 0.355, 1), 
-                        opacity 0.8s cubic-bezier(0.215, 0.61, 0.355, 1);
-        }
-
-        .reveal-up { transform: translateY(40px); }
-        .reveal-left { transform: translateX(-50px); }
-        .reveal-right { transform: translateX(50px); }
-
-        .reveal-element.is-visible {
-            opacity: 1;
-            transform: translate(0, 0);
-        }
-
-        .delay-1 { transition-delay: 0.1s; }
-        .delay-2 { transition-delay: 0.2s; }
-        .delay-3 { transition-delay: 0.3s; }
-        .delay-4 { transition-delay: 0.4s; }
-
+        /* Canvas background */
         #webgl-canvas {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 1;
+            z-index: 0;
             pointer-events: none;
-        }
-
-        .main-wrapper {
-            display: flex;
-            min-height: 100vh;
-            position: relative;
-            flex-direction: column;
-            z-index: 2;
-        }
-
-        .site-content { flex: 1; width: 100%; }
-        .container { 
-            width: 100%;
-            max-width: var(--container-max-width); 
-            margin: 0 auto; 
-            padding: 0 var(--container-padding-pc); 
-        }
-
-        .nav-dock {
-            position: fixed;
-            right: 24px;
-            top: 50%;
-            transform: translateY(-50%);
-            display: flex;
-            flex-direction: column;
-            gap: 18px;
-            padding: 22px 14px;
-            border-radius: 48px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            border: 1px solid var(--border-glow);
-            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-        }
-
-        .nav-item {
-            width: 48px;
-            height: 48px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-radius: 50%;
-            color: #bfe3ff;
-            text-decoration: none;
-            font-size: 1.2rem;
-            transition: all var(--transition-speed) ease;
-            background: rgba(64, 164, 212, 0.12);
-            border: 1px solid var(--border-glow);
-            cursor: pointer;
-            position: relative;
-        }
-
-        .nav-item:hover, .nav-item.active {
-            background: rgba(0, 160, 255, 0.35);
-            color: #ffffff;
-            transform: scale(1.08);
-            border-color: var(--accent-blue);
-        }
-        
-        .nav-item::after {
-            content: attr(data-title);
-            position: absolute;
-            right: 70px;
-            background: #0a1e2c;
-            backdrop-filter: blur(8px);
-            color: #aad4ff;
-            font-size: 0.75rem;
-            font-weight: 500;
-            padding: 6px 14px;
-            border-radius: 20px;
-            white-space: nowrap;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity var(--transition-speed), transform var(--transition-speed);
-            border: 1px solid #2a6285;
-            transform: translateX(10px);
-        }
-        
-        .nav-item:hover::after { opacity: 1; transform: translateX(0); }
-
-        .glass-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--border-glow);
-            border-radius: 32px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
-            transition: all var(--transition-speed) ease;
-        }
-
-        .top-bar {
-            background: rgba(4, 12, 22, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(64, 164, 212, 0.3);
-            position: sticky;
-            top: 0;
-            z-index: 999;
-        }
-        
-        .top-container { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            padding: 0.9rem var(--container-padding-pc); 
-            gap: 1.5rem;
-            flex-wrap: wrap;
-        }
-        
-        /* HIGH-END LOGO BRANDING FRAME */
-        .brand-identity {
-            flex: 1 1 auto;
-            display: flex;
-            align-items: center;
-            gap: 1.2rem;
-        }
-
-        .logo-frame {
-            background: linear-gradient(135deg, rgba(6, 20, 36, 0.95) 0%, rgba(2, 8, 16, 0.98) 100%);
-            border: 1px solid rgba(64, 164, 212, 0.4);
-            padding: 0.5rem;
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), inset 0 0 12px rgba(64, 164, 212, 0.15);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all var(--transition-speed) ease;
-        }
-        
-        .brand-identity:hover .logo-frame {
-            border-color: var(--accent-blue);
-            box-shadow: 0 4px 25px rgba(64, 164, 212, 0.25), inset 0 0 12px rgba(64, 164, 212, 0.2);
-            transform: translateY(-1px);
-        }
-
-        .logo-frame img {
-            height: clamp(38px, 5vw, 46px);
-            width: auto;
-            object-fit: contain;
             display: block;
         }
 
-        .logo-meta {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .brand-title-wrap {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .brand-name {
-            font-size: 1.45rem;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            background: linear-gradient(135deg, #ffffff 40%, #cce7ff 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        .brand-badge {
-            font-size: 0.65rem;
-            font-weight: 800;
-            background: linear-gradient(105deg, #236b9e, #164f73);
-            color: #ffffff;
-            padding: 0.15rem 0.5rem;
-            border-radius: 6px;
-            letter-spacing: 0.75px;
-            border: 1px solid rgba(123, 197, 255, 0.25);
-        }
-        
-        /* ADVANCED TICKER ALLIANCE ANIMATION */
-        .ticker-viewport {
-            margin-top: 5px;
-            width: clamp(260px, 35vw, 420px);
-            overflow: hidden;
+        .main-wrapper {
             position: relative;
-            mask-image: linear-gradient(90deg, transparent 0%, #000 8%, #000 92%, transparent 100%);
-            -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 8%, #000 92%, transparent 100%);
+            z-index: 1;
+            min-height: 100vh;
         }
 
-        .ticker-track {
-            display: flex;
-            white-space: nowrap;
-            gap: 2rem;
-            width: max-content;
-            animation: allianceTicker 22s linear infinite;
-        }
-
-        .ticker-track:hover {
-            animation-play-state: paused;
-        }
-
-        .alliance-statement {
-            font-size: 0.72rem;
-            font-weight: 700;
-            color: #7cb8e0;
-            letter-spacing: 1px;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            text-transform: uppercase;
-        }
-
-        .alliance-statement i {
-            font-size: 0.55rem;
-            color: var(--accent-blue);
-            text-shadow: 0 0 6px var(--accent-blue);
-        }
-
-        @keyframes allianceTicker {
-            0% { transform: translate3d(0, 0, 0); }
-            100% { transform: translate3d(-50%, 0, 0); }
-        }
-        
-        .contact-header { 
-            display: flex; 
-            gap: 0.75rem; 
-            flex-wrap: wrap;
-            justify-content: flex-start;
-        }
-
-        .btn-small {
-            background: rgba(64, 164, 212, 0.15);
-            border: 1px solid rgba(64, 164, 212, 0.5);
-            padding: 0.5rem 1.4rem;
-            border-radius: 40px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: #c2e2ff;
-            text-decoration: none;
-            transition: var(--transition-speed) ease;
-            white-space: nowrap;
-        }
-        
-        .btn-small:hover {
-            background: var(--accent-glow);
-            color: white;
-            border-color: var(--accent-glow);
-            transform: translateY(-1px);
-        }
-
-        .hero { padding: var(--hero-padding) 0; }
-        
-        .hero-glass {
-            padding: var(--hero-card-padding);
-            border-radius: 40px;
-            background: rgba(6, 20, 34, 0.45);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            border: 1px solid rgba(64, 164, 212, 0.25);
-        }
-        
-        .hero-grid { 
-            display: grid; 
-            grid-template-columns: 1.35fr 1fr; 
-            align-items: center; 
-            gap: var(--layout-gap); 
-        }
-        
-        .badge-deal {
-            background: rgba(0, 160, 255, 0.15);
-            backdrop-filter: blur(4px);
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.4rem 1.4rem;
-            border-radius: 40px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: #9ed3ff;
-            margin-bottom: 1.5rem;
-            border: 1px solid var(--accent-glow);
-        }
-        
-        .hero-content h1 { 
-            font-size: clamp(2rem, 5vw, 3.2rem); 
-            line-height: 1.15; 
-            font-weight: 800; 
-        }
-        
-        .highlight { 
-            background: linear-gradient(120deg, #7bc5ff, #3faae0);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        
-        .slogan {
-            font-size: clamp(1rem, 2vw, 1.25rem);
-            font-weight: 600;
-            border-left: 4px solid var(--accent-blue);
-            padding-left: 1rem;
-            margin: 1.5rem 0;
-            color: #cae3ff;
-        }
-        
-        .hero-desc { color: var(--text-muted); margin: 1rem 0 2rem; font-size: 1.05rem; max-width: 600px; }
-        .hero-stats { display: flex; gap: 2rem; margin: 2rem 0; flex-wrap: wrap; }
-        .stat-number { font-size: clamp(1.8rem, 4vw, 2.2rem); font-weight: 800; color: #7bc5ff; line-height: 1; }
-        .stat-label { font-size: 0.85rem; color: #7cb8e0; margin-top: 4px; }
-        
-        /* DYNAMIC FRONT HERO EMBED BRANDING WINDOW */
-        .hero-image { 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: center; 
-            text-align: center;
-            width: 100%;
-        }
-
-        .als-showcase-window {
-            position: relative;
-            width: clamp(200px, 28vw, 300px);
-            height: clamp(200px, 28vw, 300px);
-            background: radial-gradient(circle at 30% 30%, rgba(12, 42, 74, 0.85) 0%, rgba(4, 15, 28, 0.98) 75%);
-            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
-            border: 2px solid rgba(64, 164, 212, 0.45);
-            box-shadow: 0 25px 55px rgba(0, 0, 0, 0.65), inset 0 0 35px rgba(64, 164, 212, 0.2);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            animation: morphingBlob 14s ease-in-out infinite alternate;
-        }
-
-        .als-showcase-window::before {
-            content: '';
-            position: absolute;
-            top: -12px; left: -12px; right: -12px; bottom: -12px;
-            border: 1px dashed rgba(64, 164, 212, 0.3);
-            border-radius: 50%;
-            animation: counterRotate 28s linear infinite;
-        }
-
-        .als-embedded-logo {
-            width: 32%;
-            height: auto;
-            object-fit: contain;
-            filter: drop-shadow(0 4px 15px rgba(64, 164, 212, 0.4));
-            margin-bottom: 0.75rem;
-        }
-
-        .als-core-text {
-            font-size: clamp(2.4rem, 6vw, 3.2rem);
-            font-weight: 900;
-            letter-spacing: -1.5px;
-            background: linear-gradient(135deg, #ffffff 30%, #7bc5ff 70%, #206d9e 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            line-height: 1;
-        }
-
-        .als-sub-text {
-            font-size: clamp(0.7rem, 1.2vw, 0.8rem);
-            font-weight: 800;
-            color: var(--accent-blue);
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            margin-top: 4px;
-        }
-
-        @keyframes morphingBlob {
-            0% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
-            50% { border-radius: 65% 35% 45% 55% / 55% 40% 60% 45%; }
-            100% { border-radius: 45% 55% 50% 50% / 45% 55% 45% 55%; }
-        }
-
-        @keyframes counterRotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(-360deg); }
-        }
-        
+        .container { max-width: 1280px; margin:0 auto; padding:0 2rem; }
+        .glass-card { background: rgba(10,25,40,0.45); backdrop-filter: blur(16px); border:1px solid var(--border); border-radius:32px; padding:2rem; }
         .btn-primary {
             background: linear-gradient(105deg, #236b9e, #164f73);
-            border: 1px solid rgba(123, 197, 255, 0.3);
-            padding: 0.9rem 2rem;
-            border-radius: 40px;
-            font-weight: 600;
-            color: white;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.6rem;
-            text-decoration: none;
-            transition: all var(--transition-speed) ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            border:1px solid rgba(123,197,255,0.3);
+            padding:0.9rem 2rem;
+            border-radius:40px;
+            font-weight:600;
+            color:white;
+            display:inline-flex;
+            align-items:center;
+            gap:0.6rem;
+            text-decoration:none;
+            transition:0.2s;
         }
-        
-        .btn-primary:hover { 
-            background: var(--accent-glow); 
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(44, 143, 201, 0.3);
-        }
-        
+        .btn-primary:hover { background: #2c8fc9; transform:translateY(-2px); }
         .btn-secondary {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid var(--accent-blue);
-            padding: 0.9rem 1.8rem;
-            border-radius: 40px;
-            font-weight: 500;
-            color: #cae3ff;
-            text-decoration: none;
-            transition: all var(--transition-speed) ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
+            background:rgba(255,255,255,0.03);
+            border:1px solid var(--accent);
+            padding:0.9rem 1.8rem;
+            border-radius:40px;
+            font-weight:500;
+            color:#cae3ff;
+            text-decoration:none;
+            display:inline-flex;
+            align-items:center;
+            gap:0.5rem;
+            transition:0.2s;
         }
-
-        .btn-secondary:hover { background: rgba(64, 164, 212, 0.1); transform: translateY(-2px); }
-        .section { padding: var(--section-padding) 0; }
-        
+        .btn-secondary:hover { background:rgba(64,164,212,0.1); transform:translateY(-2px); }
+        .section { padding: 4rem 0; }
         .section-subhead {
             color: #7bc5ff;
             font-weight: 600;
             text-transform: uppercase;
             font-size: 0.8rem;
             letter-spacing: 2px;
-            margin-bottom: 0.8rem;
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            margin-bottom: 0.8rem;
         }
-        
-        h2 { font-size: clamp(1.8rem, 4vw, 2.4rem); font-weight: 700; margin-bottom: 1.5rem; line-height: 1.2; }
+        h2 { font-size: clamp(1.8rem, 4vw, 2.4rem); font-weight: 700; margin-bottom: 1.5rem; line-height:1.2; }
+        .highlight { background: linear-gradient(120deg, #7bc5ff, #3faae0); -webkit-background-clip:text; background-clip:text; color:transparent; }
 
-        .api-switch-panel {
-            background: rgba(0, 20, 35, 0.75);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-radius: 2rem;
-            padding: 1.4rem 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 1.5rem;
-            border: 1px solid var(--accent-glow);
-            flex-wrap: wrap;
+        /* ===== ENHANCED NAVIGATION ===== */
+        .top-bar {
+            background: rgba(4,12,22,0.92);
+            backdrop-filter:blur(20px);
+            border-bottom:1px solid rgba(64,164,212,0.3);
+            position:sticky;
+            top:0;
+            z-index:999;
+            padding:0.6rem 0;
         }
-        
-        .api-switch-panel > div {
-            flex: 1 1 auto;
-            min-width: fit-content;
+        .top-container {
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            flex-wrap:wrap;
+            gap:0.5rem 1.5rem;
         }
-        
-        .api-badge { font-size: 0.85rem; background: #0e3b55; padding: 0.3rem 1rem; border-radius: 30px; color: #b0defa; margin-left: 0.5rem; display: inline-block; }
-        .switcher-buttons { display: flex; gap: 12px; flex-wrap: wrap; justify-content: flex-start; }
-
-        .switcher-btn {
-            background: rgba(22, 101, 139, 0.4);
-            border: 1px solid rgba(64, 164, 212, 0.3);
-            color: #cae3ff;
-            padding: 0.6rem 1.4rem;
-            border-radius: 36px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all var(--transition-speed) ease;
-            font-family: inherit;
-            white-space: nowrap;
+        .brand-identity { display:flex; align-items:center; gap:1rem; }
+        .logo-frame {
+            background: linear-gradient(135deg, rgba(6,20,36,0.95), rgba(2,8,16,0.98));
+            border:1px solid rgba(64,164,212,0.4);
+            padding:0.4rem;
+            border-radius:14px;
         }
-        
-        .switcher-btn:hover, .switcher-btn.active {
-            background: #248bc2;
-            color: #ffffff;
-            border-color: #7bc5ff;
-            transform: scale(1.03);
+        .logo-frame img { height:36px; width:auto; display:block; }
+        .brand-name {
+            font-size:1.2rem;
+            font-weight:800;
+            background:linear-gradient(135deg, #fff 40%, #cce7ff 100%);
+            -webkit-background-clip:text;
+            background-clip:text;
+            color:transparent;
         }
-
-        .services-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, var(--services-grid-min-width)); 
-            gap: var(--layout-gap); 
-            margin-top: 2.5rem; 
-        }
-        
-        .service-card {
-            background: rgba(8, 25, 40, 0.6);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            border-radius: 2rem;
-            padding: var(--card-padding);
-            transition: all var(--transition-speed) ease, opacity 0.6s, transform 0.6s;
-            border: 1px solid var(--border-glow);
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
-        
-        .service-card:hover {
-            background: rgba(20, 50, 75, 0.7);
-            border-color: var(--accent-blue);
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-        }
-        
-        .icon-lg {
-            font-size: 2rem;
-            background: rgba(64, 164, 212, 0.15);
-            width: 64px;
-            height: 64px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 20px;
-            margin-bottom: 1.5rem;
-            color: #7bc5ff;
-            flex-shrink: 0;
+        .brand-badge {
+            font-size:0.6rem;
+            font-weight:800;
+            background:linear-gradient(105deg, #236b9e, #164f73);
+            color:#fff;
+            padding:0.1rem 0.5rem;
+            border-radius:6px;
+            border:1px solid rgba(123,197,255,0.25);
         }
 
-        .service-card h3 { font-size: 1.3rem; margin-bottom: 0.75rem; }
-        .service-card p { color: var(--text-muted); font-size: 0.95rem; flex-grow: 1; }
-        
-        .deal-tag {
-            background: rgba(64, 164, 212, 0.2);
-            color: #b5deff;
-            font-weight: 600;
-            font-size: 0.75rem;
-            padding: 0.4rem 1rem;
-            border-radius: 30px;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-            margin-top: 1.5rem;
-            align-self: flex-start;
-            border: 1px solid rgba(64, 164, 212, 0.25);
+        /* Enhanced Navigation Links with Dropdown */
+        .nav-links {
+            display:flex;
+            gap:0.2rem;
+            align-items:center;
+            flex-wrap:wrap;
+        }
+        .nav-links .nav-item {
+            position:relative;
+            padding:0.5rem 0.9rem;
+            color:#bfe3ff;
+            text-decoration:none;
+            font-size:0.85rem;
+            font-weight:500;
+            transition:0.2s;
+            border-radius:8px;
+            cursor:pointer;
+            display:flex;
+            align-items:center;
+            gap:0.3rem;
+            background:transparent;
+            border:none;
+            font-family:inherit;
+        }
+        .nav-links .nav-item:hover,
+        .nav-links .nav-item.active {
+            color:#ffffff;
+            background:rgba(64,164,212,0.12);
+        }
+        .nav-links .nav-item i {
+            font-size:0.75rem;
+            opacity:0.6;
+        }
+        .nav-links .nav-item .dropdown {
+            position:absolute;
+            top:100%;
+            left:0;
+            background:rgba(4,12,22,0.96);
+            backdrop-filter:blur(16px);
+            border:1px solid rgba(64,164,212,0.2);
+            border-radius:12px;
+            padding:0.5rem 0;
+            min-width:180px;
+            opacity:0;
+            visibility:hidden;
+            transform:translateY(8px);
+            transition:0.25s ease;
+            box-shadow:0 12px 40px rgba(0,0,0,0.6);
+            pointer-events:none;
+        }
+        .nav-links .nav-item:hover .dropdown {
+            opacity:1;
+            visibility:visible;
+            transform:translateY(0);
+            pointer-events:auto;
+        }
+        .nav-links .nav-item .dropdown a {
+            display:block;
+            padding:0.5rem 1.2rem;
+            color:#cae3ff;
+            text-decoration:none;
+            font-size:0.8rem;
+            transition:0.15s;
+            border-left:2px solid transparent;
+        }
+        .nav-links .nav-item .dropdown a:hover {
+            background:rgba(64,164,212,0.08);
+            border-left-color:var(--accent);
+            color:#fff;
+        }
+        .btn-small {
+            background:rgba(64,164,212,0.15);
+            border:1px solid rgba(64,164,212,0.5);
+            padding:0.4rem 1.2rem;
+            border-radius:40px;
+            font-size:0.8rem;
+            font-weight:500;
+            color:#c2e2ff;
+            text-decoration:none;
+            transition:0.2s;
+            white-space:nowrap;
+        }
+        .btn-small:hover { background:var(--accent); color:#fff; }
+
+        /* Hero */
+        .hero { padding: 3rem 0 2rem; }
+        .hero-grid {
+            display:grid;
+            grid-template-columns:1.3fr 1fr;
+            gap:2rem;
+            align-items:center;
+        }
+        .hero-content h1 {
+            font-size:clamp(2rem,5vw,3.2rem);
+            font-weight:800;
+            line-height:1.15;
+        }
+        .hero-desc {
+            color:rgba(220,240,255,0.8);
+            margin:1rem 0 2rem;
+            font-size:1.05rem;
+        }
+        .hero-stats {
+            display:flex;
+            gap:2rem;
+            margin:2rem 0;
+            flex-wrap:wrap;
+        }
+        .stat-number {
+            font-size:clamp(1.8rem,4vw,2.2rem);
+            font-weight:800;
+            color:#7bc5ff;
+        }
+        .stat-label { font-size:0.85rem; color:#7cb8e0; }
+        .hero-image {
+            display:flex;
+            justify-content:center;
+            align-items:center;
+        }
+        .als-showcase-window {
+            width:clamp(200px,28vw,300px);
+            height:clamp(200px,28vw,300px);
+            background:radial-gradient(circle at 30% 30%, rgba(12,42,74,0.85), rgba(4,15,28,0.98));
+            border-radius:30% 70% 70% 30% / 30% 30% 70% 70%;
+            border:2px solid rgba(64,164,212,0.45);
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            justify-content:center;
+            animation:morphingBlob 14s ease-in-out infinite alternate;
+            box-shadow:0 25px 55px rgba(0,0,0,0.65), inset 0 0 35px rgba(64,164,212,0.2);
+        }
+        .als-showcase-window img { width:32%; filter:drop-shadow(0 4px 15px rgba(64,164,212,0.4)); margin-bottom:0.5rem; }
+        .als-core-text {
+            font-size:clamp(2.4rem,6vw,3.2rem);
+            font-weight:900;
+            background:linear-gradient(135deg, #fff 30%, #7bc5ff 70%, #206d9e 100%);
+            -webkit-background-clip:text;
+            background-clip:text;
+            color:transparent;
+        }
+        .als-sub-text {
+            font-size:clamp(0.7rem,1.2vw,0.8rem);
+            font-weight:800;
+            color:var(--accent);
+            letter-spacing:4px;
+            text-transform:uppercase;
+        }
+        @keyframes morphingBlob {
+            0% { border-radius:30% 70% 70% 30% / 30% 30% 70% 70%; }
+            50% { border-radius:65% 35% 45% 55% / 55% 40% 60% 45%; }
+            100% { border-radius:45% 55% 50% 50% / 45% 55% 45% 55%; }
         }
 
-        .expertise-showcase {
-            background: rgba(8, 24, 38, 0.6);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            border-radius: 2.5rem;
-            padding: var(--hero-card-padding);
-            border: 1px solid rgba(64, 164, 212, 0.3);
+        /* CITYFIND APP SECTION */
+        .cityfind-showcase {
+            display:flex;
+            align-items:center;
+            gap:2.5rem;
+            flex-wrap:wrap;
+            margin:2rem 0;
+            padding:2rem;
+            background:linear-gradient(135deg, rgba(0,30,50,0.6), rgba(10,40,70,0.4));
+            border-radius:2rem;
+            border:2px solid rgba(154,205,50,0.3);
+            box-shadow:0 0 30px rgba(154,205,50,0.05);
         }
-        
-        .stack-tag-container { display: flex; flex-wrap: wrap; gap: 0.75rem; margin: 2rem 0; }
-        
-        .stack-tag-container span {
-            background: rgba(0, 40, 60, 0.6);
-            padding: 0.5rem 1.2rem;
-            border-radius: 40px;
-            font-size: 0.85rem;
-            border: 1px solid #2c6d91;
-            color: #d2ebff;
+        .cityfind-showcase .app-icon {
+            flex:0 0 140px;
+            cursor:pointer;
+            transition:0.3s;
+            border-radius:20px;
+            background:rgba(255,255,255,0.05);
+            padding:0.5rem;
+            border:1px solid rgba(154,205,50,0.2);
         }
-        
-        .expert-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, var(--expert-grid-min-width)); 
-            gap: var(--layout-gap); 
-            margin-top: 2rem; 
+        .cityfind-showcase .app-icon:hover {
+            transform:scale(1.08);
+            box-shadow:0 0 30px rgba(154,205,50,0.2);
+            border-color:rgba(154,205,50,0.6);
         }
-        
-        .expert-item {
-            background: rgba(0, 20, 32, 0.7);
-            border-radius: 1.5rem;
-            padding: 1.5rem;
-            text-align: center;
-            border: 1px solid #2c6d91;
-            transition: transform var(--transition-speed);
-            height: 100%;
+        .cityfind-showcase .app-icon img {
+            width:100%;
+            height:auto;
+            display:block;
+            border-radius:16px;
+        }
+        .cityfind-showcase .app-info {
+            flex:1;
+            min-width:200px;
+        }
+        .cityfind-showcase .app-info h3 {
+            font-size:clamp(1.6rem,3vw,2.4rem);
+            font-weight:800;
+            margin-bottom:0.3rem;
+        }
+        .cityfind-showcase .app-info h3 .city { color:#9acd32; }
+        .cityfind-showcase .app-info h3 .find { color:#40a4d4; }
+        .cityfind-showcase .app-info .badge-star {
+            color:#ffd700;
+            font-size:1.2rem;
+            margin-left:0.3rem;
+        }
+        .cityfind-showcase .app-info .version-badge {
+            font-size:0.7rem;
+            background:rgba(154,205,50,0.2);
+            color:#9acd32;
+            padding:0.15rem 0.8rem;
+            border-radius:20px;
+            display:inline-block;
+            margin-top:0.3rem;
+        }
+        .cityfind-showcase .app-info p {
+            color:rgba(220,240,255,0.85);
+            margin:0.8rem 0 1.2rem;
+            font-size:1rem;
+            line-height:1.6;
+        }
+        .cityfind-showcase .app-info .subdomain-list {
+            display:flex;
+            flex-wrap:wrap;
+            gap:0.6rem 1.2rem;
+        }
+        .cityfind-showcase .app-info .subdomain-list span {
+            font-size:0.8rem;
+            color:#7cb8e0;
+            background:rgba(64,164,212,0.1);
+            padding:0.2rem 0.8rem;
+            border-radius:30px;
+            border:1px solid rgba(64,164,212,0.15);
+        }
+        .cityfind-showcase .app-info .subdomain-list span i {
+            color:#9acd32;
+            margin-right:0.3rem;
+        }
+        .cityfind-btn {
+            background:linear-gradient(105deg, #236b9e, #164f73);
+            border:1px solid rgba(154,205,50,0.4);
+            padding:0.7rem 1.8rem;
+            border-radius:40px;
+            font-weight:600;
+            color:white;
+            display:inline-flex;
+            align-items:center;
+            gap:0.6rem;
+            text-decoration:none;
+            transition:0.2s;
+            cursor:pointer;
+        }
+        .cityfind-btn:hover {
+            background:#2c8fc9;
+            transform:translateY(-2px);
+            box-shadow:0 0 25px rgba(154,205,50,0.15);
         }
 
-        .expert-item:hover { transform: scale(1.02); }
-        .expert-item i { font-size: 1.8rem; color: #7bc5ff; margin-bottom: 0.75rem; }
+        /* Scrolling Partner Ticker */
+        .partner-ticker {
+            background: rgba(0,20,32,0.5);
+            border-top:1px solid var(--border);
+            border-bottom:1px solid var(--border);
+            padding:1rem 0;
+            overflow:hidden;
+            margin:2rem 0;
+        }
+        .partner-track {
+            display:flex;
+            gap:4rem;
+            animation: scrollPartners 28s linear infinite;
+            width:max-content;
+            align-items:center;
+        }
+        .partner-track:hover { animation-play-state:paused; }
+        .partner-track .partner-item {
+            display:flex;
+            align-items:center;
+            gap:1rem;
+            white-space:nowrap;
+            cursor:pointer;
+            transition:0.3s;
+            padding:0.3rem 0.8rem;
+            border-radius:12px;
+            background:rgba(255,255,255,0.02);
+            border:1px solid transparent;
+            text-decoration:none;
+        }
+        .partner-track .partner-item:hover {
+            background:rgba(64,164,212,0.08);
+            border-color:rgba(64,164,212,0.2);
+            transform:scale(1.02);
+        }
+        .partner-track .partner-item img {
+            height:40px;
+            width:auto;
+            object-fit:contain;
+            filter:brightness(1) drop-shadow(0 2px 8px rgba(64,164,212,0.2));
+            transition:0.3s;
+            pointer-events:none;
+        }
+        .partner-track .partner-item:hover img {
+            filter:brightness(1.2);
+        }
+        .partner-track .partner-item span {
+            color:#7cb8e0;
+            font-size:0.85rem;
+            font-weight:700;
+            letter-spacing:1.5px;
+            text-transform:uppercase;
+            pointer-events:none;
+        }
+        .partner-track .partner-item:hover span {
+            color:#ffffff;
+        }
+        @keyframes scrollPartners {
+            0% { transform:translateX(0); }
+            100% { transform:translateX(-50%); }
+        }
 
+        /* Business Showcase */
+        .business-showcase {
+            display:flex;
+            align-items:center;
+            gap:3rem;
+            flex-wrap:wrap;
+            margin:2rem 0;
+            padding:1.5rem;
+            background:rgba(0,20,32,0.3);
+            border-radius:2rem;
+            border:1px solid var(--border);
+        }
+        .business-showcase .image-wrap {
+            flex:0 0 280px;
+            background:#fff;
+            padding:0.8rem;
+            border-radius:16px;
+            box-shadow:0 8px 30px rgba(0,0,0,0.5);
+        }
+        .business-showcase .image-wrap img {
+            width:100%;
+            height:auto;
+            display:block;
+            border-radius:8px;
+        }
+        .business-showcase .text-wrap {
+            flex:1;
+            min-width:240px;
+        }
+        .business-showcase .text-wrap h3 {
+            font-size:clamp(1.4rem,2.5vw,2rem);
+            font-weight:700;
+            margin-bottom:0.5rem;
+            background:linear-gradient(135deg, #fff, #7bc5ff);
+            -webkit-background-clip:text;
+            background-clip:text;
+            color:transparent;
+        }
+        .business-showcase .text-wrap p {
+            color:rgba(220,240,255,0.85);
+            font-size:1rem;
+            line-height:1.7;
+            margin-bottom:0.8rem;
+        }
+        .business-showcase .text-wrap .benefits {
+            display:flex;
+            flex-wrap:wrap;
+            gap:0.8rem 1.5rem;
+        }
+        .business-showcase .text-wrap .benefits span {
+            font-size:0.9rem;
+            color:#7bc5ff;
+            font-weight:500;
+        }
+        .business-showcase .text-wrap .benefits i {
+            margin-right:0.4rem;
+            color:var(--accent);
+        }
+
+        /* Feature Grid */
+        .feature-grid {
+            display:grid;
+            grid-template-columns:repeat(auto-fit, minmax(250px,1fr));
+            gap:1.5rem;
+            margin-top:2rem;
+        }
+        .feature-card {
+            background:rgba(8,25,40,0.6);
+            backdrop-filter:blur(14px);
+            border-radius:2rem;
+            padding:1.8rem;
+            border:1px solid var(--border);
+            transition:0.2s;
+        }
+        .feature-card:hover { border-color:var(--accent); transform:translateY(-4px); }
+        .feature-card i { font-size:2rem; color:#7bc5ff; margin-bottom:0.8rem; }
+        .feature-card h3 { font-size:1.1rem; margin-bottom:0.3rem; }
+        .feature-card p { color:rgba(220,240,255,0.7); font-size:0.9rem; }
+
+        /* Comparison */
+        .comparison-grid {
+            display:grid;
+            grid-template-columns:repeat(auto-fit, minmax(180px,1fr));
+            gap:1.5rem;
+            margin:2rem 0;
+        }
+        .comparison-card {
+            background:rgba(0,20,32,0.6);
+            border-radius:1.5rem;
+            padding:1.5rem;
+            text-align:center;
+            border:1px solid #2c6d91;
+            transition:0.2s;
+        }
+        .comparison-card:hover { border-color:var(--accent); transform:scale(1.02); }
+        .comparison-card i { font-size:2rem; color:#7bc5ff; margin-bottom:0.5rem; }
+        .comparison-card h4 { font-size:1rem; }
+        .comparison-card p { font-size:0.8rem; color:var(--text-muted); }
+
+        /* People */
+        .people-grid {
+            display:grid;
+            grid-template-columns:repeat(auto-fit, minmax(140px,1fr));
+            gap:1.2rem;
+            margin:2rem 0;
+        }
+        .people-card {
+            background:rgba(0,20,32,0.6);
+            border-radius:1.5rem;
+            padding:1.2rem;
+            text-align:center;
+            border:1px solid #1e4c6e;
+        }
+        .people-card .avatar {
+            width:70px;
+            height:70px;
+            border-radius:50%;
+            background:linear-gradient(135deg, #1e4c6e, #0a2a40);
+            margin:0 auto 0.6rem;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:2rem;
+            color:#7bc5ff;
+            border:2px solid var(--accent);
+        }
+        .people-card h4 { font-size:0.9rem; color:#cae3ff; }
+        .people-card p { font-size:0.7rem; color:var(--text-muted); }
+
+        /* Offices */
+        .office-grid {
+            display:grid;
+            grid-template-columns:repeat(auto-fit, minmax(140px,1fr));
+            gap:1.2rem;
+            margin:2rem 0;
+        }
+        .office-item {
+            background:rgba(0,20,32,0.5);
+            border-radius:1.2rem;
+            padding:1rem;
+            text-align:center;
+            border:1px solid #1e4c6e;
+        }
+        .office-item i { font-size:2rem; color:#7bc5ff; margin-bottom:0.3rem; }
+        .office-item h4 { font-size:0.85rem; color:#cae3ff; }
+        .office-item p { font-size:0.65rem; color:var(--text-muted); }
+
+        /* Lexurer */
+        .lexurer-grid {
+            display:grid;
+            grid-template-columns:repeat(auto-fit, minmax(200px,1fr));
+            gap:1.5rem;
+            margin:2rem 0;
+        }
+        .lexurer-card {
+            background:rgba(0,20,32,0.5);
+            border-radius:1.5rem;
+            padding:1.5rem;
+            text-align:center;
+            border:1px solid #2c6d91;
+            transition:0.2s;
+        }
+        .lexurer-card:hover { border-color:var(--accent); transform:scale(1.02); }
+        .lexurer-card i { font-size:2.2rem; color:#7bc5ff; margin-bottom:0.5rem; }
+        .lexurer-card h4 { font-size:1rem; color:#cae3ff; }
+        .lexurer-card p { font-size:0.8rem; color:var(--text-muted); }
+
+        /* Automation */
+        .automation-wrapper {
+            background:rgba(0,20,32,0.5);
+            border-radius:1.5rem;
+            padding:2rem;
+            border:1px solid var(--accent);
+            margin:2rem 0;
+            text-align:center;
+            position:relative;
+            overflow:hidden;
+        }
+        .automation-wrapper .glow-text {
+            font-size:clamp(1.2rem,2.5vw,2rem);
+            font-weight:700;
+            background:linear-gradient(90deg, #7bc5ff, #40a4d4, #7bc5ff);
+            background-size:200% auto;
+            -webkit-background-clip:text;
+            background-clip:text;
+            color:transparent;
+            animation: shimmer 4s linear infinite;
+            display:inline-block;
+        }
+        @keyframes shimmer {
+            0% { background-position:0% center; }
+            100% { background-position:200% center; }
+        }
+        .automation-wrapper .pulse-circle {
+            display:inline-block;
+            width:60px;
+            height:60px;
+            line-height:60px;
+            border-radius:50%;
+            background:rgba(64,164,212,0.15);
+            border:2px solid var(--accent);
+            font-size:2rem;
+            color:#7bc5ff;
+            animation: pulse 2s ease-in-out infinite;
+            margin-bottom:0.8rem;
+        }
+        @keyframes pulse {
+            0% { transform:scale(1); box-shadow:0 0 0 0 rgba(64,164,212,0.4); }
+            50% { transform:scale(1.05); box-shadow:0 0 0 15px rgba(64,164,212,0); }
+            100% { transform:scale(1); box-shadow:0 0 0 0 rgba(64,164,212,0); }
+        }
+        .automation-wrapper .floating-text {
+            display:flex;
+            gap:1.5rem;
+            justify-content:center;
+            flex-wrap:wrap;
+            margin-top:1rem;
+        }
+        .automation-wrapper .floating-text span {
+            font-size:0.85rem;
+            font-weight:500;
+            color:#cae3ff;
+            animation: float 3s ease-in-out infinite;
+            display:inline-block;
+        }
+        .automation-wrapper .floating-text span:nth-child(2) { animation-delay:0.5s; }
+        .automation-wrapper .floating-text span:nth-child(3) { animation-delay:1s; }
+        .automation-wrapper .floating-text span:nth-child(4) { animation-delay:1.5s; }
+        @keyframes float {
+            0%,100% { transform:translateY(0px); }
+            50% { transform:translateY(-6px); }
+        }
+
+        /* Contact with new image */
+        .contact-image-wrap {
+            display:flex;
+            align-items:center;
+            gap:2rem;
+            flex-wrap:wrap;
+            justify-content:center;
+            margin:1.5rem 0;
+        }
+        .contact-image-wrap img {
+            max-width:200px;
+            border-radius:16px;
+            border:2px solid var(--border);
+            background:#fff;
+            padding:0.3rem;
+        }
+        .contact-image-wrap .contact-text {
+            color:var(--text-muted);
+            font-size:1rem;
+            max-width:400px;
+        }
+        .contact-image-wrap .contact-text strong {
+            color:#7bc5ff;
+        }
+
+        /* Footer */
         footer {
-            background: rgba(2, 8, 16, 0.9);
-            backdrop-filter: blur(10px);
-            border-top: 1px solid #1e4c6e;
-            padding: var(--section-padding) 0 calc(var(--section-padding) / 2);
-            margin-top: 4rem;
-            font-size: 0.95rem;
+            background:rgba(2,8,16,0.9);
+            backdrop-filter:blur(10px);
+            border-top:1px solid #1e4c6e;
+            padding:4rem 0 2rem;
+            margin-top:4rem;
         }
-        
-        .footer-flex { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, var(--footer-grid-min-width)); 
-            gap: 3rem; 
+        .footer-flex {
+            display:grid;
+            grid-template-columns:2fr repeat(3,1fr);
+            gap:3rem;
         }
+        .footer-brand h3 { color:#7bc5ff; font-size:1.4rem; }
+        .footer-brand p { color:var(--text-muted); margin:0.5rem 0 1rem; }
+        .footer-column h4 { color:#fff; margin-bottom:1rem; }
+        .footer-column ul { list-style:none; }
+        .footer-column ul li { margin-bottom:0.6rem; }
+        .footer-column ul li a { color:var(--text-muted); text-decoration:none; transition:0.2s; }
+        .footer-column ul li a:hover { color:#7bc5ff; }
 
-        @media (min-width: 769px) {
-            .footer-flex {
-                grid-template-columns: 2fr repeat(3, 1fr);
-            }
+        @media (max-width:1024px) {
+            .hero-grid { grid-template-columns:1fr; text-align:center; }
+            .hero-stats { justify-content:center; }
+            .top-container { justify-content:center; }
+            .nav-links { justify-content:center; gap:0.1rem; }
+            .footer-flex { grid-template-columns:1fr 1fr; }
+            .business-showcase { flex-direction:column; text-align:center; }
+            .business-showcase .image-wrap { flex:0 0 auto; width:100%; max-width:320px; margin:0 auto; }
+            .contact-image-wrap { flex-direction:column; text-align:center; }
+            .partner-track { gap:2rem; }
+            .partner-track .partner-item img { height:32px; }
+            .cityfind-showcase { flex-direction:column; text-align:center; }
+            .cityfind-showcase .app-icon { flex:0 0 100px; }
+            .cityfind-showcase .app-info .subdomain-list { justify-content:center; }
+            .nav-links .nav-item { padding:0.4rem 0.6rem; font-size:0.8rem; }
         }
-
-        .footer-brand h3 { color: #7bc5ff; font-size: 1.4rem; margin-bottom: 0.5rem; }
-        .footer-brand p { color: var(--text-muted); margin-bottom: 1rem; }
-        .footer-brand .parent-companies { font-size: 0.8rem; color: #7cb8e0; margin-top: 10px; border-top: 1px solid rgba(64,164,212,0.2); padding-top: 10px; }
-        
-        .footer-logo-wrap {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            margin-bottom: 0.75rem;
-        }
-        .footer-logo-wrap img {
-            height: 32px;
-            width: auto;
-            object-fit: contain;
-        }
-
-        .footer-column h4 { color: white; margin-bottom: 1rem; font-size: 1rem; }
-        .footer-column ul { list-style: none; }
-        .footer-column ul li { margin-bottom: 0.6rem; }
-        .footer-column ul li a { color: var(--text-muted); text-decoration: none; transition: color var(--transition-speed); }
-        .footer-column ul li a:hover { color: #7bc5ff; }
-
-        @media (max-width: 1024px) {
-            .container { padding: 0 var(--container-padding-pc); }
-            .hero-grid { grid-template-columns: 1fr; text-align: center; }
-            .hero-desc { margin: 1rem auto 2rem; }
-            .hero-stats { justify-content: center; }
-            .slogan { border-left: none; border-top: 2px solid var(--accent-blue); padding-left: 0; padding-top: 1rem; }
-            .hero-content { order: 1; }
-            .hero-image { order: 2; margin-bottom: 2rem; }
-            .top-container { justify-content: center; text-align: center; }
-            .brand-identity { flex: 1 1 100%; flex-direction: column; align-items: center; gap: 0.75rem; }
-            .logo-meta { align-items: center; }
-            .brand-title-wrap { justify-content: center; }
-            .ticker-viewport { width: 100%; max-width: 380px; }
-            .contact-header { justify-content: center; width: 100%; }
-        }
-
-        @media (max-width: 768px) {
-            .container { padding: 0 var(--container-padding-mobile); }
-            .top-container { padding: 1rem var(--container-padding-mobile); }
-            .api-switch-panel { flex-direction: column; text-align: center; gap: 1rem; border-radius: 1.5rem; }
-            .switcher-buttons { justify-content: center; width: 100%; }
-            .switcher-btn { flex: 1 1 auto; text-align: center; font-size: 0.9rem; padding: 0.5rem 1rem; }
-            
-            .nav-dock { 
-                right: 0; 
-                bottom: 0; 
-                top: auto; 
-                transform: none; 
-                flex-direction: row; 
-                width: 100%; 
-                justify-content: space-around; 
-                border-radius: 0; 
-                padding: 10px clamp(1rem, 5vw, 2rem) calc(10px + env(safe-area-inset-bottom));
-                border-left: none; 
-                border-right: none; 
-                border-bottom: none;
-                box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.4);
-            }
-            .nav-item {
-                width: clamp(40px, 11vw, 48px);
-                height: clamp(40px, 11vw, 48px);
-                font-size: 1.05rem;
-            }
-            .nav-item::after { display: none; }
-            
-            .main-wrapper { padding-bottom: calc(70px + env(safe-area-inset-bottom)); }
-        }
-
-        @media (max-width: 480px) {
-            .contact-header .btn-small {
-                width: 100%;
-                text-align: center;
-            }
-            .hero-stats {
-                flex-direction: column;
-                gap: 1.25rem;
-            }
+        @media (max-width:768px) {
+            .container { padding:0 1.25rem; }
+            .footer-flex { grid-template-columns:1fr; }
+            .nav-links { gap:0.1rem; flex-wrap:wrap; }
+            .nav-links .nav-item { padding:0.3rem 0.5rem; font-size:0.75rem; }
+            .partner-track { gap:1.5rem; }
+            .partner-track .partner-item img { height:28px; }
+            .partner-track .partner-item span { font-size:0.7rem; }
+            .cityfind-showcase .app-icon { flex:0 0 80px; }
         }
     </style>
 </head>
 <body>
 
-<canvas id="webgl-canvas"></canvas>
+    <!-- Ambient Background Canvas -->
+    <canvas id="webgl-canvas"></canvas>
 
-<div class="main-wrapper">
-    <div class="site-content">
-        
+    <div class="main-wrapper">
+        <!-- ===== ENHANCED HEADER WITH DROPDOWN NAVIGATION ===== -->
         <header class="top-bar">
             <div class="container top-container">
-                <!-- IMMACULATE LOGO AND RUNNING TICKER BRANDING FRAME -->
                 <div class="brand-identity">
                     <div class="logo-frame">
-                        <img src="https://files.catbox.moe/6yf2rn.png" alt="AILifeSolution Official Logo">
+                        <img src="https://files.catbox.moe/6yf2rn.png" alt="AILifeSolution">
                     </div>
-                    <div class="logo-meta">
-                        <div class="brand-title-wrap">
-                            <span class="brand-name">AILifeSolution</span>
-                            <span class="brand-badge">SYSTEMS</span>
-                        </div>
-                        <!-- MARQUEE DATA ENGINE -->
-                        <div class="ticker-viewport" aria-hidden="true">
-                            <div class="ticker-track">
-                                <div class="alliance-statement"><i class="fa-solid fa-layer-group"></i> Powered by ZASS</div>
-                                <div class="alliance-statement"><i class="fa-solid fa-shield-halved"></i> CYITTECH UK</div>
-                                <div class="alliance-statement"><i class="fa-solid fa-atom"></i> ANTARESX</div>
-                                <div class="alliance-statement"><i class="fa-solid fa-server"></i> XIBSTECH</div>
-                                <!-- Loop Duplicate for Fluid Continuation Effect -->
-                                <div class="alliance-statement"><i class="fa-solid fa-layer-group"></i> Powered by ZASS</div>
-                                <div class="alliance-statement"><i class="fa-solid fa-shield-halved"></i> CYITTECH UK</div>
-                                <div class="alliance-statement"><i class="fa-solid fa-atom"></i> ANTARESX</div>
-                                <div class="alliance-statement"><i class="fa-solid fa-server"></i> XIBSTECH</div>
-                            </div>
-                        </div>
+                    <div>
+                        <div><span class="brand-name">AILifeSolution</span> <span class="brand-badge">SYSTEMS</span></div>
+                        <div style="font-size:0.6rem; color:#7cb8e0; letter-spacing:1px;">POWERED BY ZASS · CYITTECH UK · ANTARESX · XIBSTECH · LEXURER</div>
                     </div>
                 </div>
-                <nav class="contact-header" aria-label="Quick Links">
-                    <a href="#course" class="btn-small"><i class="fas fa-graduation-cap"></i> Free Learning Course</a>
-                    <a href="#contact" class="btn-small"><i class="fas fa-comment"></i> Request System Audit</a>
+                <nav class="nav-links">
+                    <!-- Platform with dropdown -->
+                    <div class="nav-item">
+                        Platform <i class="fas fa-chevron-down"></i>
+                        <div class="dropdown">
+                            <a href="#platform">Features</a>
+                            <a href="#platform">AI Code Creation</a>
+                            <a href="#platform">Developer Workflows</a>
+                            <a href="#platform">Application Security</a>
+                        </div>
+                    </div>
+                    <!-- Solutions with dropdown -->
+                    <div class="nav-item">
+                        Solutions <i class="fas fa-chevron-down"></i>
+                        <div class="dropdown">
+                            <a href="#solutions">Enterprise</a>
+                            <a href="#solutions">Startups</a>
+                            <a href="#solutions">Mid-Market</a>
+                            <a href="#solutions">Custom Systems</a>
+                        </div>
+                    </div>
+                    <!-- Enterprise -->
+                    <a href="#enterprise" class="nav-item">Enterprise</a>
+                    <!-- Security with dropdown -->
+                    <div class="nav-item">
+                        Security <i class="fas fa-chevron-down"></i>
+                        <div class="dropdown">
+                            <a href="#security">Zero-Trust</a>
+                            <a href="#security">Secret Protection</a>
+                            <a href="#security">Vulnerability Scanning</a>
+                        </div>
+                    </div>
+                    <!-- Resources with dropdown -->
+                    <div class="nav-item">
+                        Resources <i class="fas fa-chevron-down"></i>
+                        <div class="dropdown">
+                            <a href="#resources">Docs</a>
+                            <a href="#resources">Community</a>
+                            <a href="#resources">Blog</a>
+                            <a href="#resources">Status</a>
+                        </div>
+                    </div>
+                    <!-- Company with dropdown -->
+                    <div class="nav-item">
+                        Company <i class="fas fa-chevron-down"></i>
+                        <div class="dropdown">
+                            <a href="#company">About</a>
+                            <a href="#company">Careers</a>
+                            <a href="#company">Newsroom</a>
+                            <a href="#company">Leadership</a>
+                        </div>
+                    </div>
+                    <a href="#contact" class="btn-small"><i class="fas fa-comment"></i> Contact</a>
                 </nav>
             </div>
         </header>
 
         <main>
-            <section class="hero" id="home">
+            <!-- HERO -->
+            <section class="hero">
                 <div class="container">
-                    <div class="hero-glass">
-                        <div class="hero-grid">
-                            <div class="hero-content reveal-element reveal-left">
-                                <div class="badge-deal"><i class="fas fa-check-circle"></i> HIGH-PRODUCTIVITY SOFTWARE ONLY</div>
-                                <h1>We build advanced, fully‑managed systems that grow your revenue.</h1>
-                                <div class="slogan"><i class="fas fa-shipping-fast"></i> 1-WEEK RAPID BUILDING · 1-MONTH REVENUE SAFETY TESTING</div>
-                                <p class="hero-desc">At <strong>AILifeSolution</strong>, we design complex business software architectures. We do not build useless, unproductive widgets. We build high-value systems like high-converting online stores, smart customer portals, and seamless automated business environments.</p>
-                                
-                                <div class="hero-stats">
-                                    <div>
-                                        <div class="stat-number">1 Week</div>
-                                        <div class="stat-label">Strict Rapid Creation</div>
-                                    </div>
-                                    <div>
-                                        <div class="stat-number">30 Days</div>
-                                        <div class="stat-label">Full Quality Stress Testing</div>
-                                    </div>
-                                    <div>
-                                        <div class="stat-number">100%</div>
-                                        <div class="stat-label">Completely Managed Support</div>
-                                    </div>
+                    <div class="hero-grid">
+                        <div class="hero-content">
+                            <div style="display:inline-flex; background:rgba(0,160,255,0.15); padding:0.3rem 1.2rem; border-radius:40px; font-size:0.75rem; font-weight:700; color:#9ed3ff; border:1px solid var(--accent); margin-bottom:1.5rem;">
+                                <i class="fas fa-check-circle"></i> ENTERPRISE BUSINESS SYSTEMS
+                            </div>
+                            <h1>Build advanced systems that <span class="highlight">drive real revenue</span></h1>
+                            <p class="hero-desc">We design high-converting online stores, smart customer portals, and automated business environments — all fully managed, with 1‑week build and 30‑day stress testing.</p>
+                            <div class="hero-stats">
+                                <div><div class="stat-number">1 Week</div><div class="stat-label">Rapid Build</div></div>
+                                <div><div class="stat-number">30 Days</div><div class="stat-label">Stress Testing</div></div>
+                                <div><div class="stat-number">100%</div><div class="stat-label">Managed Support</div></div>
+                            </div>
+                            <div style="display:flex; gap:1rem; flex-wrap:wrap;">
+                                <a href="#platform" class="btn-primary"><i class="fas fa-rocket"></i> Explore Systems</a>
+                                <a href="#contact" class="btn-secondary"><i class="fas fa-calendar-alt"></i> Free Consultation</a>
+                            </div>
+                        </div>
+                        <div class="hero-image">
+                            <div class="als-showcase-window">
+                                <img src="https://files.catbox.moe/6yf2rn.png" alt="ALS">
+                                <div class="als-core-text">ALS</div>
+                                <div class="als-sub-text">Systems</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================= -->
+            <!-- ===== LATEST POSTS - ILIYOREKEBISHWA ===== -->
+            <!-- ============================================= -->
+            <section class="section" style="padding-top:0;">
+                <div class="container">
+                    <div class="glass-card">
+                        <div class="section-subhead"><i class="fas fa-newspaper"></i> Latest Posts</div>
+                        <h2>What's <span class="highlight">new</span></h2>
+                        <div id="home-posts-grid" class="post-grid">
+                            <!-- Posts loaded dynamically -->
+                            <div class="text-muted text-center" style="padding:2rem;">Loading posts...</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CITYFIND APP SECTION -->
+            <section class="section" style="padding-top:0;">
+                <div class="container">
+                    <div class="glass-card" style="border-color:rgba(154,205,50,0.2);">
+                        <div class="section-subhead"><i class="fas fa-map-pin" style="color:#9acd32;"></i> Featured App</div>
+                        <h2>Discover <span class="highlight" style="background:linear-gradient(120deg, #9acd32, #40a4d4); -webkit-background-clip:text; background-clip:text; color:transparent;">CityFind</span> — Your Urban Companion</h2>
+                        <div class="cityfind-showcase">
+                            <div class="app-icon" onclick="window.open('https://cityfind.ailifesolution.com', '_blank')" title="Open CityFind App">
+                                <img src="https://files.catbox.moe/6voiyk.png" alt="CityFind App Icon">
+                            </div>
+                            <div class="app-info">
+                                <h3>
+                                    <span class="city">CITY</span>
+                                    <span class="find">FIND</span>
+                                    <span class="badge-star">★</span>
+                                </h3>
+                                <div class="version-badge">v9.2</div>
+                                <p>Explore, discover, and navigate cities with ease. CityFind helps you find the best places, events, and hidden gems — all powered by AILifeSolution infrastructure.</p>
+                                <div class="subdomain-list">
+                                    <span><i class="fas fa-check-circle"></i> cityfind.ailifesolution.com</span>
+                                    <span><i class="fas fa-check-circle"></i> maps.ailifesolution.com</span>
+                                    <span><i class="fas fa-check-circle"></i> events.ailifesolution.com</span>
+                                    <span><i class="fas fa-check-circle"></i> guides.ailifesolution.com</span>
                                 </div>
-                                
-                                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-                                    <a href="#services" class="btn-primary"><i class="fas fa-shopping-bag"></i> Browse Money-Making Systems</a>
-                                    <a href="#course" class="btn-secondary"><i class="fas fa-book-open"></i> Join Our Zero-Cost Class</a>
-                                </div>
-                            </div>
-                            
-                            <!-- ADVANCED BRAND WINDOW EMBEDDING THE EXPLICIT PNG ASSETS -->
-                            <div class="hero-image reveal-element reveal-right">
-                                <div class="als-showcase-window">
-                                    <img src="https://files.catbox.moe/6yf2rn.png" alt="ALS Icon Embed" class="als-embedded-logo">
-                                    <div class="als-core-text">ALS</div>
-                                    <div class="als-sub-text">Systems</div>
+                                <div style="margin-top:1.2rem;">
+                                    <button onclick="window.open('https://cityfind.ailifesolution.com', '_blank')" class="cityfind-btn">
+                                        <i class="fas fa-external-link-alt"></i> Launch CityFind App
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -845,124 +912,284 @@
                 </div>
             </section>
 
-            <section class="container reveal-element reveal-up" style="margin-top: -1rem;" aria-label="Solution Switcher">
-                <div class="api-switch-panel">
-                    <div>
-                        <i class="fas fa-layer-group"></i> 
-                        <strong>What System Do You Need?</strong> 
-                        <span class="api-badge"><i class="fas fa-shield"></i> Premium Engineering</span>
+            <!-- SCROLLING PARTNER TICKER -->
+            <div class="partner-ticker">
+                <div class="container" style="padding:0; overflow:hidden;">
+                    <div class="partner-track">
+                        <a href="https://zass.ailifesolution.com" target="_blank" class="partner-item" title="Visit ZASS">
+                            <img src="https://files.catbox.moe/zg68dv.jpg" alt="ZASS" style="height:45px;">
+                            <span>ZASS</span>
+                        </a>
+                        <a href="https://cyittech.ailifesolution.com" target="_blank" class="partner-item" title="Visit CYITTECH UK">
+                            <img src="https://files.catbox.moe/w6unis.png" alt="CYITTECH UK" style="height:45px;">
+                            <span>CYITTECH UK</span>
+                        </a>
+                        <a href="https://antaresx.ailifesolution.com" target="_blank" class="partner-item" title="Visit ANTARESX">
+                            <img src="https://camo.githubusercontent.com/a0d1b80fe33bc3e7c8b6c7f409d4c0f94b9213e2286f7f1fc26de8836417c2f4/68747470733a2f2f66696c65732e636174626f782e6d6f652f7862377a62632e706e67" alt="ANTARESX" style="height:45px;">
+                            <span>ANTARESX</span>
+                        </a>
+                        <a href="https://xibstech.ailifesolution.com" target="_blank" class="partner-item" title="Visit XIBSTECH">
+                            <span style="color:#7cb8e0; font-size:0.85rem; font-weight:700; letter-spacing:1.5px;">XIBSTECH</span>
+                        </a>
+                        <a href="https://lexurer.ailifesolution.com" target="_blank" class="partner-item" title="Visit LEXURER">
+                            <img src="https://files.catbox.moe/60jjtc.png" alt="LEXURER" style="height:45px; background:transparent; filter:brightness(1);">
+                            <span>LEXURER</span>
+                        </a>
+                        <!-- Duplicate for seamless scrolling -->
+                        <a href="https://zass.ailifesolution.com" target="_blank" class="partner-item" title="Visit ZASS">
+                            <img src="https://files.catbox.moe/zg68dv.jpg" alt="ZASS" style="height:45px;">
+                            <span>ZASS</span>
+                        </a>
+                        <a href="https://cyittech.ailifesolution.com" target="_blank" class="partner-item" title="Visit CYITTECH UK">
+                            <img src="https://files.catbox.moe/w6unis.png" alt="CYITTECH UK" style="height:45px;">
+                            <span>CYITTECH UK</span>
+                        </a>
+                        <a href="https://antaresx.ailifesolution.com" target="_blank" class="partner-item" title="Visit ANTARESX">
+                            <img src="https://camo.githubusercontent.com/a0d1b80fe33bc3e7c8b6c7f409d4c0f94b9213e2286f7f1fc26de8836417c2f4/68747470733a2f2f66696c65732e636174626f782e6d6f652f7862377a62632e706e67" alt="ANTARESX" style="height:45px;">
+                            <span>ANTARESX</span>
+                        </a>
+                        <a href="https://xibstech.ailifesolution.com" target="_blank" class="partner-item" title="Visit XIBSTECH">
+                            <span style="color:#7cb8e0; font-size:0.85rem; font-weight:700; letter-spacing:1.5px;">XIBSTECH</span>
+                        </a>
+                        <a href="https://lexurer.ailifesolution.com" target="_blank" class="partner-item" title="Visit LEXURER">
+                            <img src="https://files.catbox.moe/60jjtc.png" alt="LEXURER" style="height:45px; background:transparent; filter:brightness(1);">
+                            <span>LEXURER</span>
+                        </a>
                     </div>
-                    <div class="switcher-buttons">
-                        <button id="switchToEcom" class="switcher-btn active" data-stack="eCommerce"><i class="fas fa-shopping-cart"></i> Digital E-Shops</button>
-                        <button id="switchToWorkflow" class="switcher-btn" data-stack="workflows"><i class="fas fa-bolt"></i> Personal Efficiency</button>
-                        <button id="switchToManagement" class="switcher-btn" data-stack="management"><i class="fas fa-handshake"></i> Fully Managed Care</button>
-                    </div>
-                    <div><i class="fas fa-sync-alt"></i> <span id="currentStackLabel">Active: 🛒 Digital E-Shops</span></div>
                 </div>
-            </section>
+            </div>
 
-            <section id="services" class="section">
+            <!-- BUSINESS SHOWCASE -->
+            <section class="section" style="padding-top:0;">
                 <div class="container">
-                    <div class="section-subhead reveal-element reveal-left"><i class="fas fa-star"></i> High Value Architectures</div>
-                    <h2 id="servicesTitle" class="reveal-element reveal-left delay-1">E-Commerce & Online Business Powerhouses</h2>
-                    <div id="servicesGridContainer" class="services-grid"></div>
-                </div>
-            </section>
-
-            <section id="course" class="section" style="padding-top: 0;">
-                <div class="container">
-                    <div class="expertise-showcase reveal-element reveal-up" style="background: linear-gradient(135deg, rgba(8,35,60,0.7) 0%, rgba(2,12,24,0.9) 100%); border-color: #40a4d4;">
-                        <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem;">
-                            <div>
-                                <div class="section-subhead"><i class="fas fa-gift"></i> Zero Fees · Unlimited Access</div>
-                                <h2>Free Online Understanding Course</h2>
-                                <p style="color: #cae3ff; font-size: 1.1rem; margin-top: 0.5rem;">No payment plans. No rigid time schedules. Just your pure focus and growth.</p>
+                    <div class="glass-card">
+                        <div class="section-subhead"><i class="fas fa-chart-line"></i> For Business Owners</div>
+                        <h2>Turn your vision into <span class="highlight">reality</span></h2>
+                        <div class="business-showcase">
+                            <div class="image-wrap">
+                                <img src="https://files.catbox.moe/q11mil.png" alt="Business Solutions">
                             </div>
-                            <i class="fas fa-graduation-cap" style="font-size: 3.5rem; color:#7bc5ff;" aria-hidden="true"></i>
-                        </div>
-                        <p style="margin: 1.5rem 0; color: var(--text-muted); line-height: 1.7;">We believe premium business knowledge should be open to all. Learn exactly how complex, high-performing software runs behind the scenes. Move completely at your own pace from the comfort of your office, with no expiration dates or credit card inputs required.</p>
-                        
-                        <div class="stack-tag-container">
-                            <span>How E-Shops Automatically Sell</span><span>Protecting Credit Card Streams</span><span>Designing Flowcharts That Save Time</span><span>How to Manage Systems Easily</span>
-                        </div>
-                        
-                        <div style="margin-top: 2rem;">
-                            <a href="#contact" class="btn-primary" style="background: #1e5a82;"><i class="fas fa-user-plus"></i> Claim Your Instant Free Access Link</a>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section id="global-network" class="section" style="padding-top: 0;">
-                <div class="container">
-                    <div class="expertise-showcase reveal-element reveal-up">
-                        <div style="text-align: center; margin-bottom: 2.5rem;">
-                            <div class="section-subhead" style="justify-content: center;"><i class="fas fa-network-wired"></i> Global Network Stability</div>
-                            <h2>Supported by World-Class Parent Companies</h2>
-                            <p style="color: var(--text-muted); max-width: 700px; margin: 0 auto;">AILifeSolution works alongside prominent software leaders to guarantee your custom setups have massive server power and unbreachable security.</p>
-                        </div>
-                        
-                        <div class="expert-grid">
-                            <div class="expert-item">
-                                <i class="fas fa-cubes" aria-hidden="true"></i>
-                                <h3>ZASS</h3>
-                                <p>Core System Frameworks</p>
-                            </div>
-                            <div class="expert-item">
-                                <i class="fas fa-building-shield" aria-hidden="true"></i>
-                                <h3>CYITTECH UK</h3>
-                                <p>Global Cloud Protections</p>
-                            </div>
-                            <div class="expert-item">
-                                <i class="fas fa-dna" aria-hidden="true"></i>
-                                <h3>AntaresX</h3>
-                                <p>Next-Gen Logic Designs</p>
-                            </div>
-                            <div class="expert-item">
-                                <i class="fas fa-server" aria-hidden="true"></i>
-                                <h3>xibstech</h3>
-                                <p>Massive Database Architecture</p>
+                            <div class="text-wrap">
+                                <h3>Scale your business with intelligent systems</h3>
+                                <p>We build high-converting online stores, automated workflows, and smart customer portals — all fully managed. No technical headaches, just pure growth.</p>
+                                <div class="benefits">
+                                    <span><i class="fas fa-check-circle"></i> 1-Week Rapid Build</span>
+                                    <span><i class="fas fa-check-circle"></i> 30-Day Stress Testing</span>
+                                    <span><i class="fas fa-check-circle"></i> 100% Managed Care</span>
+                                    <span><i class="fas fa-check-circle"></i> Enterprise-Grade Security</span>
+                                    <span><i class="fas fa-check-circle"></i> Global Infrastructure</span>
+                                </div>
+                                <div style="margin-top:1.2rem;">
+                                    <a href="#contact" class="btn-primary"><i class="fas fa-rocket"></i> Start Your Project</a>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <section id="deals" class="section">
+            <!-- PLATFORM FEATURES -->
+            <section id="platform" class="section">
                 <div class="container">
-                    <div class="section-subhead reveal-element reveal-left"><i class="fas fa-hourglass-start"></i> Strictly Streamlined Delivery</div>
-                    <h2 class="reveal-element reveal-left delay-1">How We Guarantee <span class="highlight">Unrivaled Excellence</span></h2>
+                    <div class="glass-card">
+                        <div class="section-subhead"><i class="fas fa-cube"></i> Platform</div>
+                        <h2>Everything you need to <span class="highlight">compete at enterprise level</span></h2>
+                        <div class="feature-grid">
+                            <div class="feature-card"><i class="fas fa-store"></i><h3>High-Volume Digital Stores</h3><p>Slick, lightning-fast virtual shops engineered to process endless buyer orders without lagging or crashing.</p></div>
+                            <div class="feature-card"><i class="fas fa-credit-card"></i><h3>Armored Payment Checkouts</h3><p>Secured transactional funnels that protect customer card details and safely deposit funds into your vaults.</p></div>
+                            <div class="feature-card"><i class="fas fa-shield-alt"></i><h3>Enterprise Security</h3><p>Zero-trust architecture, secret protection, and AI-driven vulnerability scanning with rapid remediation.</p></div>
+                            <div class="feature-card"><i class="fas fa-project-diagram"></i><h3>Automated Workflows</h3><p>Custom business logic that eliminates manual data entry and connects your apps seamlessly.</p></div>
+                            <div class="feature-card"><i class="fas fa-cloud-upload-alt"></i><h3>Global Cloud Infrastructure</h3><p>Seamless AWS, Azure, and hybrid deployment with auto-scaling and worldwide distribution.</p></div>
+                            <div class="feature-card"><i class="fas fa-chart-line"></i><h3>Live Analytics & Insights</h3><p>Real-time dashboards, custom reports, and revenue attribution for data-driven decisions.</p></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SOLUTIONS & ENTERPRISE BENCHMARK -->
+            <section id="solutions" class="section" style="padding-top:0;">
+                <div class="container">
+                    <div class="glass-card">
+                        <div class="section-subhead"><i class="fas fa-building"></i> Solutions & Benchmark</div>
+                        <h2>We stand with the world's best</h2>
+                        <p style="color:var(--text-muted); max-width:700px;">AILifeSolution is engineered to compete with industry giants — with agility, transparency, and unmatched support.</p>
+                        <div class="comparison-grid">
+                            <div class="comparison-card"><i class="fab fa-github"></i><h4>GitHub</h4><p>Actions, MCP Registry, and open‑source ecosystem integration.</p></div>
+                            <div class="comparison-card"><i class="fab fa-microsoft"></i><h4>Microsoft</h4><p>Azure, Copilot, and enterprise‑grade AI infrastructure.</p></div>
+                            <div class="comparison-card"><i class="fab fa-aws"></i><h4>AWS</h4><p>Serverless, global scaling, and massive data throughput.</p></div>
+                            <div class="comparison-card"><i class="fas fa-brain"></i><h4>OpenAI</h4><p>Advanced LLMs and predictive automation for business.</p></div>
+                            <div class="comparison-card"><i class="fas fa-code"></i><h4>GitLab</h4><p>Complete DevOps lifecycle with integrated security.</p></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ENTERPRISE -->
+            <section id="enterprise" class="section" style="padding-top:0;">
+                <div class="container">
+                    <div class="glass-card">
+                        <div class="section-subhead"><i class="fas fa-users-cog"></i> Enterprise</div>
+                        <h2>Built for scale, <span class="highlight">trusted by leaders</span></h2>
+                        <p style="color:var(--text-muted);">From startups to global enterprises, AILifeSolution adapts to your team size and industry.</p>
+                        <div style="display:flex; flex-wrap:wrap; gap:1.5rem; margin-top:1.5rem;">
+                            <div style="background:rgba(0,20,32,0.4); border-radius:1.5rem; padding:1.2rem; text-align:center; border:1px solid #1e4c6e; flex:1; min-width:140px;">
+                                <i class="fas fa-rocket" style="font-size:2rem; color:#7bc5ff;"></i>
+                                <h4 style="margin-top:0.3rem;">Startups</h4>
+                                <p style="font-size:0.8rem; color:var(--text-muted);">Rapid prototyping and go-to-market</p>
+                            </div>
+                            <div style="background:rgba(0,20,32,0.4); border-radius:1.5rem; padding:1.2rem; text-align:center; border:1px solid #1e4c6e; flex:1; min-width:140px;">
+                                <i class="fas fa-building" style="font-size:2rem; color:#7bc5ff;"></i>
+                                <h4 style="margin-top:0.3rem;">Mid-Market</h4>
+                                <p style="font-size:0.8rem; color:var(--text-muted);">Scalable workflows and security</p>
+                            </div>
+                            <div style="background:rgba(0,20,32,0.4); border-radius:1.5rem; padding:1.2rem; text-align:center; border:1px solid #1e4c6e; flex:1; min-width:140px;">
+                                <i class="fas fa-globe" style="font-size:2rem; color:#7bc5ff;"></i>
+                                <h4 style="margin-top:0.3rem;">Enterprise</h4>
+                                <p style="font-size:0.8rem; color:var(--text-muted);">Global compliance and dedicated support</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECURITY -->
+            <section id="security" class="section" style="padding-top:0;">
+                <div class="container">
+                    <div class="glass-card">
+                        <div class="section-subhead"><i class="fas fa-shield-halved"></i> Security</div>
+                        <h2>Enterprise-grade <span class="highlight">protection</span></h2>
+                        <p style="color:var(--text-muted);">Security is embedded in every layer of our platform. From code to cloud, we ensure your data and systems are safeguarded.</p>
+                        <div style="display:flex; flex-wrap:wrap; gap:1.5rem; margin-top:1.5rem;">
+                            <div style="background:rgba(0,20,32,0.4); border-radius:1.5rem; padding:1.2rem; border:1px solid #1e4c6e; flex:1; min-width:160px;">
+                                <i class="fas fa-lock" style="font-size:1.8rem; color:#7bc5ff;"></i>
+                                <h4>Zero-Trust Architecture</h4>
+                                <p style="font-size:0.8rem; color:var(--text-muted);">Every access is verified, every request is authenticated.</p>
+                            </div>
+                            <div style="background:rgba(0,20,32,0.4); border-radius:1.5rem; padding:1.2rem; border:1px solid #1e4c6e; flex:1; min-width:160px;">
+                                <i class="fas fa-key" style="font-size:1.8rem; color:#7bc5ff;"></i>
+                                <h4>Secret Protection</h4>
+                                <p style="font-size:0.8rem; color:var(--text-muted);">Automated detection and prevention of leaked credentials.</p>
+                            </div>
+                            <div style="background:rgba(0,20,32,0.4); border-radius:1.5rem; padding:1.2rem; border:1px solid #1e4c6e; flex:1; min-width:160px;">
+                                <i class="fas fa-virus-slash" style="font-size:1.8rem; color:#7bc5ff;"></i>
+                                <h4>Vulnerability Scanning</h4>
+                                <p style="font-size:0.8rem; color:var(--text-muted);">AI-powered scanning with Copilot Autofix for rapid remediation.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- LEXURER / EDUCATOR -->
+            <section id="resources" class="section" style="padding-top:0;">
+                <div class="container">
+                    <div class="glass-card">
+                        <div class="section-subhead"><i class="fas fa-chalkboard-teacher"></i> Lexurer · Educator Network</div>
+                        <h2>Learn from the <span class="highlight">best in the industry</span></h2>
+                        <p style="color:var(--text-muted);">Our Lexurer program connects you with world-class educators, trainers, and subject matter experts who accelerate your team's growth.</p>
+                        <div class="lexurer-grid">
+                            <div class="lexurer-card"><i class="fas fa-user-graduate"></i><h4>Dr. Alan Turing</h4><p>AI & ML Curriculum</p></div>
+                            <div class="lexurer-card"><i class="fas fa-user-graduate"></i><h4>Prof. Grace Hopper</h4><p>DevOps & Cloud</p></div>
+                            <div class="lexurer-card"><i class="fas fa-user-graduate"></i><h4>Dr. Fei-Fei Li</h4><p>Computer Vision</p></div>
+                            <div class="lexurer-card"><i class="fas fa-user-graduate"></i><h4>Prof. Andrew Ng</h4><p>Deep Learning</p></div>
+                            <div class="lexurer-card"><i class="fas fa-user-graduate"></i><h4>Dr. Demis Hassabis</h4><p>AGI & Ethics</p></div>
+                        </div>
+                        <div style="text-align:center; margin-top:1.5rem;">
+                            <a href="#contact" class="btn-primary"><i class="fas fa-book-open"></i> Join Lexurer Program</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- INTELLIGENT AUTOMATION -->
+            <section class="section" style="padding-top:0;">
+                <div class="container">
+                    <div class="glass-card">
+                        <div class="section-subhead"><i class="fas fa-bolt"></i> Intelligent Automation</div>
+                        <h2>Smart systems that <span class="highlight">work for you</span></h2>
+                        <p style="color:var(--text-muted);">Our platform combines advanced logic, real-time data processing, and automated workflows to deliver business systems that perform without constant oversight.</p>
+                        <div class="automation-wrapper">
+                            <div class="pulse-circle"><i class="fas fa-cogs"></i></div>
+                            <div class="glow-text">Automated Business Engine</div>
+                            <p style="color:var(--text-muted); margin:0.5rem 0 1rem; font-size:0.9rem;">From inventory sync to customer communication — everything runs on autopilot.</p>
+                            <div class="floating-text">
+                                <span><i class="fas fa-sync-alt"></i> Real-Time Sync</span>
+                                <span><i class="fas fa-chart-pie"></i> Smart Analytics</span>
+                                <span><i class="fas fa-bolt"></i> Instant Updates</span>
+                                <span><i class="fas fa-robot"></i> Predictive Logic</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TEAM & PEOPLE -->
+            <section id="company" class="section" style="padding-top:0;">
+                <div class="container">
+                    <div class="glass-card">
+                        <div class="section-subhead"><i class="fas fa-user-tie"></i> Global Leadership</div>
+                        <h2>Meet our <span class="highlight">executive team</span></h2>
+                        <p style="color:var(--text-muted);">Our leaders come from top-tier tech and finance firms, bringing decades of enterprise experience.</p>
+                        <div class="people-grid">
+                            <div class="people-card"><div class="avatar"><i class="fas fa-user-circle"></i></div><h4>Dr. Sarah Chen</h4><p>CEO, ex-Microsoft AI</p></div>
+                            <div class="people-card"><div class="avatar"><i class="fas fa-user-circle"></i></div><h4>James Okafor</h4><p>CTO, ex-AWS</p></div>
+                            <div class="people-card"><div class="avatar"><i class="fas fa-user-circle"></i></div><h4>Elena Vogt</h4><p>CPO, ex-GitHub</p></div>
+                            <div class="people-card"><div class="avatar"><i class="fas fa-user-circle"></i></div><h4>Michael Torres</h4><p>VP Eng, ex-Google</p></div>
+                            <div class="people-card"><div class="avatar"><i class="fas fa-user-circle"></i></div><h4>Aisha Patel</h4><p>Head of Lexurer</p></div>
+                        </div>
+                        <div style="display:flex; flex-wrap:wrap; gap:1.5rem; justify-content:center; margin-top:1.5rem;">
+                            <div style="background:rgba(0,20,32,0.4); border-radius:1.5rem; padding:1.2rem; text-align:center; border:1px solid #1e4c6e; flex:1; min-width:140px;">
+                                <i class="fas fa-users" style="font-size:2.5rem; color:#7bc5ff;"></i>
+                                <p style="font-size:0.8rem; color:var(--text-muted); margin-top:0.3rem;">Strategy Meeting · London HQ</p>
+                            </div>
+                            <div style="background:rgba(0,20,32,0.4); border-radius:1.5rem; padding:1.2rem; text-align:center; border:1px solid #1e4c6e; flex:1; min-width:140px;">
+                                <i class="fas fa-handshake" style="font-size:2.5rem; color:#7bc5ff;"></i>
+                                <p style="font-size:0.8rem; color:var(--text-muted); margin-top:0.3rem;">Partnership Summit · NY</p>
+                            </div>
+                            <div style="background:rgba(0,20,32,0.4); border-radius:1.5rem; padding:1.2rem; text-align:center; border:1px solid #1e4c6e; flex:1; min-width:140px;">
+                                <i class="fas fa-laptop-code" style="font-size:2.5rem; color:#7bc5ff;"></i>
+                                <p style="font-size:0.8rem; color:var(--text-muted); margin-top:0.3rem;">Tech Workshop · Berlin</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- OFFICES -->
+            <section class="section" style="padding-top:0;">
+                <div class="container">
+                    <div class="glass-card">
+                        <div class="section-subhead"><i class="fas fa-globe-americas"></i> Global Presence</div>
+                        <h2>Our offices worldwide</h2>
+                        <div class="office-grid">
+                            <div class="office-item"><i class="fas fa-city"></i><h4>London</h4><p>CYITTECH UK · HQ</p></div>
+                            <div class="office-item"><i class="fas fa-landmark"></i><h4>New York</h4><p>AntaresX · Finance</p></div>
+                            <div class="office-item"><i class="fas fa-tower-broadcast"></i><h4>Singapore</h4><p>ZASS · APAC</p></div>
+                            <div class="office-item"><i class="fas fa-microchip"></i><h4>Tokyo</h4><p>xibstech · R&D</p></div>
+                            <div class="office-item"><i class="fas fa-building"></i><h4>Berlin</h4><p>European Ops</p></div>
+                            <div class="office-item"><i class="fas fa-university"></i><h4>Dubai</h4><p>MENA Regional</p></div>
+                            <div class="office-item"><i class="fas fa-chalkboard"></i><h4>Boston</h4><p>Lexurer Hub</p></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CONTACT -->
+            <section id="contact" class="section" style="padding:2rem 0 5rem;">
+                <div class="container" style="text-align:center;">
+                    <div class="section-subhead" style="justify-content:center;">Get Started</div>
+                    <h2>Ready to build the future?</h2>
                     
-                    <div class="services-grid">
-                        <div class="service-card reveal-element reveal-up delay-1">
-                            <div class="icon-lg"><i class="fas fa-bolt" aria-hidden="true"></i></div>
-                            <h3>1-Week Strict Building</h3>
-                            <p>Our complete specialist team dedicates all efforts to construct your shop engine in 7 days flat, without compromises or excuses.</p>
-                            <span style="font-size: 1rem; font-weight: 700; margin: 1rem 0 0.5rem; color:#7bc5ff;">No Dragging Timelines</span>
-                        </div>
-                        <div class="service-card reveal-element reveal-up delay-2">
-                            <div class="icon-lg"><i class="fas fa-vial" aria-hidden="true"></i></div>
-                            <h3>1-Month Full Testing</h3>
-                            <p>We stress-test your code for 30 full days under heavy mock visitor traffic loops to eliminate any bugs before real buyers arrive.</p>
-                            <span style="font-size: 1rem; font-weight: 700; margin: 1rem 0 0.5rem; color:#7bc5ff;">Total Stability Guaranteed</span>
-                        </div>
-                        <div class="service-card reveal-element reveal-up delay-3">
-                            <div class="icon-lg"><i class="fas fa-shield-alt" aria-hidden="true"></i></div>
-                            <h3>100% Fully Managed Care</h3>
-                            <p>You never have to touch server dashboards or hire expensive technical engineers. We manage every single element for you.</p>
-                            <span style="font-size: 1rem; font-weight: 700; margin: 1rem 0 0.5rem; color:#7bc5ff;">Pure Freedom & Safety</span>
+                    <div class="contact-image-wrap">
+                        <img src="https://files.catbox.moe/zhmued.png" alt="Contact AILifeSolution">
+                        <div class="contact-text">
+                            <p><strong>Let's talk about your business goals.</strong> Our team is ready to help you build a system that drives revenue, automates operations, and scales with your vision.</p>
                         </div>
                     </div>
-                </div>
-            </section>
 
-            <section id="contact" class="section" style="padding: 2rem 0 5rem;">
-                <div class="container" style="text-align: center;">
-                    <div class="section-subhead reveal-element reveal-up" style="justify-content: center;">Upgrade Your Efficiency Today</div>
-                    <h2>Ready to launch a real, high-yielding business system?</h2>
-                    <p class="reveal-element reveal-up delay-2" style="margin: 1rem auto 2.5rem; max-width: 600px; color: var(--text-muted);">Request a clean, straightforward operations audit call or inquire about our completely zero-cost training course link.</p>
-                    <div class="reveal-element reveal-up delay-3" style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-                        <a href="mailto:hello@ailifesolution.com" class="btn-primary"><i class="fas fa-calendar-alt"></i> Set Up A Free System Setup Call</a>
+                    <p style="max-width:600px; margin:0 auto 2rem; color:var(--text-muted);">Book a free strategy call or request our zero‑cost training course.</p>
+                    <div style="display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
+                        <a href="mailto:hello@ailifesolution.com" class="btn-primary"><i class="fas fa-calendar-alt"></i> Free System Audit</a>
                         <a href="mailto:hello@ailifesolution.com" class="btn-secondary"><i class="fas fa-envelope"></i> hello@ailifesolution.com</a>
                     </div>
                 </div>
@@ -972,359 +1199,476 @@
         <footer>
             <div class="container footer-flex">
                 <div class="footer-brand">
-                    <div class="footer-logo-wrap">
-                        <img src="https://files.catbox.moe/6yf2rn.png" alt="AILifeSolution Footer Logo">
+                    <div style="display:flex; align-items:center; gap:0.75rem;">
+                        <img src="https://files.catbox.moe/6yf2rn.png" alt="ALS" style="height:32px;">
                         <h3>AILifeSolution</h3>
                     </div>
-                    <p>High-Productivity E-Commerce & Business Systems Development Architecture.</p>
-                    <div class="parent-companies">
-                        <strong>Strategic Alliances:</strong> ZASS · CYITTECH UK · AntaresX · xibstech
+                    <p>Enterprise Business Systems · Secure · Scalable · Managed.</p>
+                    <div style="font-size:0.75rem; color:#5f8aad; margin-top:0.5rem;">
+                        <i class="fab fa-github"></i> GitHub · <i class="fab fa-microsoft"></i> Microsoft · <i class="fab fa-aws"></i> AWS · <i class="fas fa-robot"></i> AI
                     </div>
+                    <div style="margin-top:0.8rem; font-size:0.8rem; color:#7cb8e0;">Strategic Alliances: ZASS · CYITTECH UK · AntaresX · xibstech · Lexurer</div>
                 </div>
                 <div class="footer-column">
-                    <h4>Productive Systems</h4>
+                    <h4>Platform</h4>
                     <ul>
-                        <li><a href="#services">Premium Online Shops</a></li>
-                        <li><a href="#services">Automated Client Portals</a></li>
-                        <li><a href="#services">Personal Efficiency Layouts</a></li>
-                        <li><a href="#services">Secure Payment Gateways</a></li>
+                        <li><a href="#platform">Features</a></li>
+                        <li><a href="#solutions">Solutions</a></li>
+                        <li><a href="#enterprise">Enterprise</a></li>
+                        <li><a href="#security">Security</a></li>
                     </ul>
                 </div>
                 <div class="footer-column">
-                    <h4>Knowledge Access</h4>
+                    <h4>Resources</h4>
                     <ul>
-                        <li><a href="#course">Free Online Course Login</a></li>
-                        <li><a href="#course">No-Fee Understanding Modules</a></li>
-                        <li><a href="#deals">Our 1-Week Build Guarantee</a></li>
-                        <li><a href="#deals">The 1-Month Testing Strategy</a></li>
+                        <li><a href="#">Docs</a></li>
+                        <li><a href="#">Community</a></li>
+                        <li><a href="#">Status</a></li>
+                        <li><a href="#">Blog</a></li>
                     </ul>
                 </div>
                 <div class="footer-column">
-                    <h4>Legal & Corporate</h4>
+                    <h4>Company</h4>
                     <ul>
-                        <li><a href="#">Privacy Assurances</a></li>
-                        <li><a href="#">System Integrity Metrics</a></li>
-                        <li>© 2026 AILifeSolution</li>
+                        <li><a href="#company">About</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Newsroom</a></li>
+                        <li><a href="#contact">Contact</a></li>
                     </ul>
                 </div>
+            </div>
+            <div class="container" style="border-top:1px solid #1e4c6e; margin-top:2rem; padding-top:1.5rem; text-align:center; font-size:0.8rem; color:var(--text-muted);">
+                © 2026 AILifeSolution · Terms · Privacy · Manage cookies
             </div>
         </footer>
     </div>
 
-    <nav class="nav-dock" aria-label="Navigation Panel">
-        <a href="#home" class="nav-item active" data-title="Top"><i class="fa-solid fa-house"></i></a>
-        <a href="#services" class="nav-item" data-title="System Solutions"><i class="fa-solid fa-store"></i></a>
-        <a href="#course" class="nav-item" data-title="Free Learning"><i class="fa-solid fa-graduation-cap"></i></a>
-        <a href="#deals" class="nav-item" data-title="Our Timelines"><i class="fa-solid fa-clock"></i></a>
-        <a href="#contact" class="nav-item" data-title="Connect Desk"><i class="fa-solid fa-envelope"></i></a>
-    </nav>
-</div>
+    <!-- ===== THREE.JS BACKGROUND ===== -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        (function() {
+            const canvas = document.querySelector('#webgl-canvas');
+            const scene = new THREE.Scene();
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script>
-    const canvas = document.querySelector('#webgl-canvas');
-    const scene = new THREE.Scene();
-    
-    const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
-    camera.position.set(3.0, 4.0, 9.5); 
+            const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
+            camera.position.set(3.0, 4.0, 9.5);
 
-    const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: false });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.setClearColor(0x040d17, 1);
 
-    const mouse = new THREE.Vector3(0, 0, 0);
-    const targetMouse = new THREE.Vector3(0, 0, 0);
-    const raycaster = new THREE.Raycaster();
-    const planeZ = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
+            // mouse for subtle interaction
+            const mouse = new THREE.Vector3(0, 0, 0);
+            const targetMouse = new THREE.Vector3(0, 0, 0);
+            const raycaster = new THREE.Raycaster();
+            const planeZ = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
 
-    window.addEventListener('mousemove', (e) => {
-        const ndcX = (e.clientX / window.innerWidth) * 2 - 1;
-        const ndcY = -(e.clientY / window.innerHeight) * 2 + 1;
-        raycaster.setFromCamera(new THREE.Vector2(ndcX, ndcY), camera);
-        raycaster.ray.intersectPlane(planeZ, targetMouse);
-    });
+            window.addEventListener('mousemove', (e) => {
+                const ndcX = (e.clientX / window.innerWidth) * 2 - 1;
+                const ndcY = -(e.clientY / window.innerHeight) * 2 + 1;
+                raycaster.setFromCamera(new THREE.Vector2(ndcX, ndcY), camera);
+                raycaster.ray.intersectPlane(planeZ, targetMouse);
+            });
 
-    const planetarySystem = new THREE.Group();
-    if(window.innerWidth > 1024) {
-        planetarySystem.position.set(2.4, -0.2, -1.0); 
-    } else {
-        planetarySystem.position.set(0.0, -1.5, -2.0);
-    }
-    planetarySystem.rotation.set(0.38, -0.45, -0.1); 
-    scene.add(planetarySystem);
-
-    const starCount = 2000;
-    const starPositions = new Float32Array(starCount * 3);
-    for(let i=0; i<starCount; i++) {
-        starPositions[i*3]     = (Math.random() - 0.5) * 35;
-        starPositions[i*3 + 1] = (Math.random() - 0.5) * 25;
-        starPositions[i*3 + 2] = -Math.random() * 15;
-    }
-    const starGeometry = new THREE.BufferGeometry();
-    starGeometry.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
-    const starMaterial = new THREE.PointsMaterial({
-        size: 0.03, color: 0x40a4d4, transparent: true, opacity: 0.25, blending: THREE.AdditiveBlending
-    });
-    const starField = new THREE.Points(starGeometry, starMaterial);
-    scene.add(starField);
-
-    const nebulaParticleCount = 800;
-    const nebulaPositions = new Float32Array(nebulaParticleCount * 3);
-    for(let i = 0; i < nebulaParticleCount; i++) {
-        const angle = Math.random() * Math.PI * 2;
-        const radius = 3.0 + Math.random() * 6.0;
-        nebulaPositions[i*3]     = Math.cos(angle) * radius;
-        nebulaPositions[i*3 + 1] = (Math.random() - 0.5) * 8.0;
-        nebulaPositions[i*3 + 2] = (Math.random() - 0.5) * 4.0;
-    }
-    const nebulaGeometry = new THREE.BufferGeometry();
-    nebulaGeometry.setAttribute('position', new THREE.BufferAttribute(nebulaPositions, 3));
-    
-    const nebulaMaterial = new THREE.ShaderMaterial({
-        transparent: true, blending: THREE.AdditiveBlending, depthWrite: false,
-        uniforms: { uTime: { value: 0 }, uMouse: { value: new THREE.Vector3(0,0,0) } },
-        vertexShader: `
-            uniform float uTime; uniform vec3 uMouse; varying float vGlow;
-            void main() {
-                vec3 pos = position;
-                pos.y += sin(uTime * 0.4 + pos.x * 0.5) * 0.15;
-                pos.x += cos(uTime * 0.2 + pos.y * 0.5) * 0.1;
-                float mouseDist = distance(pos, uMouse * 0.5);
-                if (mouseDist < 3.0) { pos += normalize(pos - uMouse) * (3.0 - mouseDist) * 0.04; }
-                vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
-                gl_Position = projectionMatrix * mvPosition;
-                gl_PointSize = (22.0 / -mvPosition.z) * (0.6 + sin(uTime + pos.x) * 0.4);
-                vGlow = sin(uTime * 0.5 + pos.y) * 0.5 + 0.5;
+            // ---- MAIN PLANETARY GROUP ----
+            const planetarySystem = new THREE.Group();
+            if (window.innerWidth > 1024) {
+                planetarySystem.position.set(2.4, -0.2, -1.0);
+            } else {
+                planetarySystem.position.set(0.0, -1.5, -2.0);
             }
-        `,
-        fragmentShader: `
-            varying float vGlow;
-            void main() {
-                float dist = distance(gl_PointCoord, vec2(0.5)); if(dist > 0.5) discard;
-                float intensity = pow(1.0 - (dist * 2.0), 2.0);
-                vec3 cyanAccent = vec3(0.25, 0.73, 0.92); vec3 deepIndigo = vec3(0.08, 0.35, 0.65);
-                vec3 finalColor = mix(cyanAccent, deepIndigo, vGlow);
-                gl_FragColor = vec4(finalColor, intensity * 0.35);
+            planetarySystem.rotation.set(0.38, -0.45, -0.1);
+            scene.add(planetarySystem);
+
+            // ---- STARS ----
+            const starCount = 2000;
+            const starPositions = new Float32Array(starCount * 3);
+            for (let i = 0; i < starCount; i++) {
+                starPositions[i * 3] = (Math.random() - 0.5) * 35;
+                starPositions[i * 3 + 1] = (Math.random() - 0.5) * 25;
+                starPositions[i * 3 + 2] = -Math.random() * 15;
             }
-        `
-    });
-    const nebulaField = new THREE.Points(nebulaGeometry, nebulaMaterial);
-    scene.add(nebulaField);
+            const starGeometry = new THREE.BufferGeometry();
+            starGeometry.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
+            const starMaterial = new THREE.PointsMaterial({
+                size: 0.03,
+                color: 0x40a4d4,
+                transparent: true,
+                opacity: 0.25,
+                blending: THREE.AdditiveBlending
+            });
+            const starField = new THREE.Points(starGeometry, starMaterial);
+            scene.add(starField);
 
-    const glslNoiseAndLighting = `
-        float hash(float n) { return fract(sin(n) * 753.5453123); }
-        float noise(in vec3 x) {
-            vec3 p = floor(x); vec3 f = fract(x); f = f*f*(3.0-2.0*f); float n = p.x + p.y*157.0 + 113.0*p.z;
-            return mix(mix(mix(hash(n+0.0),hash(n+1.0),f.x),mix(hash(n+157.0),hash(n+158.0),f.x),f.y),
-                       mix(mix(hash(n+113.0),hash(n+114.0),f.x),mix(hash(n+270.0),hash(n+271.0),f.x),f.y),f.z);
-        }
-        float fbm(vec3 p) { float f = 0.0; f += 0.5000*noise(p); p = p*2.01; f += 0.2500*noise(p); p = p*2.02; f += 0.1250*noise(p); return f; }
-        vec3 lightDir = normalize(vec3(0.7, 0.4, 0.8));
-    `;
-
-    const planetPlanetCount = 40000;
-    const planetPositions = new Float32Array(planetPlanetCount * 3);
-    for(let i=0; i<planetPlanetCount; i++) {
-        const u = Math.random(); const v = Math.random();
-        const theta = u * 2.0 * Math.PI; const phi = Math.acos(2.0 * v - 1.0); const radius = 1.25 + (Math.random() * 0.005);
-        planetPositions[i*3]     = radius * Math.sin(phi) * Math.cos(theta);
-        planetPositions[i*3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
-        planetPositions[i*3 + 2] = radius * Math.cos(phi);
-    }
-    const planetGeometry = new THREE.BufferGeometry();
-    planetGeometry.setAttribute('position', new THREE.BufferAttribute(planetPositions, 3));
-
-    const planetShaderMaterial = new THREE.ShaderMaterial({
-        transparent: true, blending: THREE.AdditiveBlending, depthWrite: false,
-        uniforms: { uTime: { value: 0 }, uMouse: { value: new THREE.Vector3(0,0,0) } },
-        vertexShader: `
-            uniform float uTime; uniform vec3 uMouse; varying vec3 vNormal; varying vec3 vOrigPosition; varying float vCursorDist;
-            void main() {
-                vOrigPosition = position; vNormal = normalize(position); vec3 pos = position; vec4 worldPos = modelMatrix * vec4(pos, 1.0);
-                float dist = distance(worldPos.xyz, uMouse); vCursorDist = dist;
-                if(dist < 2.0) { float wave = sin(dist * 8.0 - uTime * 5.0) * 0.5 + 0.5; float force = pow(max(2.0 - dist, 0.0), 2.0) * 0.08; pos += vNormal * wave * force; }
-                vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0); gl_Position = projectionMatrix * mvPosition; gl_PointSize = (15.0 / -mvPosition.z);
+            // ---- NEBULA ----
+            const nebulaParticleCount = 800;
+            const nebulaPositions = new Float32Array(nebulaParticleCount * 3);
+            for (let i = 0; i < nebulaParticleCount; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const radius = 3.0 + Math.random() * 6.0;
+                nebulaPositions[i * 3] = Math.cos(angle) * radius;
+                nebulaPositions[i * 3 + 1] = (Math.random() - 0.5) * 8.0;
+                nebulaPositions[i * 3 + 2] = (Math.random() - 0.5) * 4.0;
             }
-        `,
-        fragmentShader: `
-            uniform float uTime; varying vec3 vNormal; varying vec3 vOrigPosition; varying float vCursorDist;
-            ${glslNoiseAndLighting}
-            void main() {
-                if(distance(gl_PointCoord, vec2(0.5)) > 0.5) discard;
-                float bandNoise = fbm(vec3(vOrigPosition.y * 5.0, uTime * 0.03, vOrigPosition.x * 1.5));
-                float bandPattern = sin(vOrigPosition.y * 10.0 + bandNoise * 5.0);
-                vec3 deepSpaceBlue = vec3(0.04, 0.15, 0.28); vec3 brightCyberCyan = vec3(0.25, 0.64, 0.83);
-                vec3 finalColor = mix(deepSpaceBlue, brightCyberCyan, smoothstep(-0.3, 0.5, bandPattern));
-                float shading = max(dot(vNormal, lightDir), 0.2); finalColor *= shading;
-                if(vCursorDist < 2.0) { float glow = pow(max((2.0 - vCursorDist) * 0.5, 0.0), 2.0); finalColor = mix(finalColor, vec3(0.8, 0.95, 1.0), glow * 0.4); }
-                gl_FragColor = vec4(finalColor, 0.75);
-            }
-        `
-    });
-    const planetBody = new THREE.Points(planetGeometry, planetShaderMaterial);
-    planetarySystem.add(planetBody);
+            const nebulaGeometry = new THREE.BufferGeometry();
+            nebulaGeometry.setAttribute('position', new THREE.BufferAttribute(nebulaPositions, 3));
 
-    const ringParticleCount = 60000;
-    const ringPositions = new Float32Array(ringParticleCount * 3);
-    const ringDistances = new Float32Array(ringParticleCount);
-    const ringAngles = new Float32Array(ringParticleCount);
-    for(let i=0; i<ringParticleCount; i++) {
-        const innerRadius = 1.75; const outerRadius = 3.65; let randRadius = Math.random();
-        if((randRadius > 0.3 && randRadius < 0.36) || (randRadius > 0.7 && randRadius < 0.73)) { randRadius += 0.08; }
-        const currentRadius = innerRadius + (randRadius * (outerRadius - innerRadius)); const angle = Math.random() * Math.PI * 2;
-        ringPositions[i*3]     = Math.cos(angle) * currentRadius;
-        ringPositions[i*3 + 1] = (Math.random() - 0.5) * 0.01;
-        ringPositions[i*3 + 2] = Math.sin(angle) * currentRadius;
-        ringDistances[i] = currentRadius; ringAngles[i] = angle;
-    }
-    const ringGeometry = new THREE.BufferGeometry();
-    ringGeometry.setAttribute('position', new THREE.BufferAttribute(ringPositions, 3));
-    ringGeometry.setAttribute('aRadius', new THREE.BufferAttribute(ringDistances, 1));
-    ringGeometry.setAttribute('aAngle', new THREE.BufferAttribute(ringAngles, 1));
+            const nebulaMaterial = new THREE.ShaderMaterial({
+                transparent: true,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false,
+                uniforms: {
+                    uTime: { value: 0 },
+                    uMouse: { value: new THREE.Vector3(0, 0, 0) }
+                },
+                vertexShader: `
+                    uniform float uTime;
+                    uniform vec3 uMouse;
+                    varying float vGlow;
+                    void main() {
+                        vec3 pos = position;
+                        pos.y += sin(uTime * 0.4 + pos.x * 0.5) * 0.15;
+                        pos.x += cos(uTime * 0.2 + pos.y * 0.5) * 0.1;
+                        float mouseDist = distance(pos, uMouse * 0.5);
+                        if (mouseDist < 3.0) {
+                            pos += normalize(pos - uMouse) * (3.0 - mouseDist) * 0.04;
+                        }
+                        vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
+                        gl_Position = projectionMatrix * mvPosition;
+                        gl_PointSize = (22.0 / -mvPosition.z) * (0.6 + sin(uTime + pos.x) * 0.4);
+                        vGlow = sin(uTime * 0.5 + pos.y) * 0.5 + 0.5;
+                    }
+                `,
+                fragmentShader: `
+                    varying float vGlow;
+                    void main() {
+                        float dist = distance(gl_PointCoord, vec2(0.5));
+                        if (dist > 0.5) discard;
+                        float intensity = pow(1.0 - (dist * 2.0), 2.0);
+                        vec3 cyanAccent = vec3(0.25, 0.73, 0.92);
+                        vec3 deepIndigo = vec3(0.08, 0.35, 0.65);
+                        vec3 finalColor = mix(cyanAccent, deepIndigo, vGlow);
+                        gl_FragColor = vec4(finalColor, intensity * 0.35);
+                    }
+                `
+            });
+            const nebulaField = new THREE.Points(nebulaGeometry, nebulaMaterial);
+            scene.add(nebulaField);
 
-    const ringShaderMaterial = new THREE.ShaderMaterial({
-        transparent: true, blending: THREE.AdditiveBlending, depthWrite: false,
-        uniforms: { uTime: { value: 0 }, uMouse: { value: new THREE.Vector3(0,0,0) } },
-        vertexShader: `
-            uniform float uTime; uniform vec3 uMouse; attribute float aRadius; attribute float aAngle; varying float vRadius; varying float vDisruption; varying vec3 vLocalPos;
-            void main() {
-                vRadius = aRadius; vec3 pos = position; float orbitSpeed = uTime * (2.0 / sqrt(aRadius)) * 0.15; float currentAngle = aAngle + orbitSpeed;
-                pos.x = cos(currentAngle) * aRadius; pos.z = sin(currentAngle) * aRadius; vec4 worldPos = modelMatrix * vec4(pos, 1.0);
-                float dist = distance(worldPos.xyz, uMouse); vDisruption = 0.0;
-                if(dist < 1.8) { float force = pow(max(1.8 - dist, 0.0), 2.0); pos.y += sin(aRadius * 20.0 + uTime * 4.0) * force * 0.1; pos.xz -= normalize(worldPos.xz - uMouse.xz) * force * 0.04; vDisruption = force * 0.3; }
-                vLocalPos = pos; vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0); gl_Position = projectionMatrix * mvPosition; gl_PointSize = (8.0 / -mvPosition.z) * (1.0 + vDisruption * 0.5);
-            }
-        `,
-        fragmentShader: `
-            varying float vRadius; varying float vDisruption; varying vec3 vLocalPos;
-            ${glslNoiseAndLighting}
-            void main() {
-                if(distance(gl_PointCoord, vec2(0.5)) > 0.5) discard;
-                float waves = sin(vRadius * 120.0 + fbm(vLocalPos * 3.5) * 4.0);
-                vec3 deepTeal = vec3(0.05, 0.32, 0.52); vec3 lightAzure = vec3(0.44, 0.77, 0.93); vec3 color = mix(deepTeal, lightAzure, smoothstep(-0.5, 0.5, waves));
-                vec3 radialNormal = normalize(vec3(vLocalPos.x, 0.2, vLocalPos.z)); float shadow = max(dot(radialNormal, lightDir), 0.3); color *= shadow;
-                if(vDisruption > 0.0) { color = mix(color, vec3(1.0, 1.0, 1.0), vDisruption * 0.5); }
-                float fade = smoothstep(1.75, 1.9, vRadius) * (1.0 - smoothstep(3.45, 3.65, vRadius)); gl_FragColor = vec4(color, fade * 0.5);
-            }
-        `
-    });
-    const ringSystem = new THREE.Points(ringGeometry, ringShaderMaterial);
-    planetarySystem.add(ringSystem);
-
-    const clock = new THREE.Clock();
-    const tick = () => {
-        const elapsed = clock.getElapsedTime();
-        mouse.x += (targetMouse.x - mouse.x) * 0.06; mouse.y += (targetMouse.y - mouse.y) * 0.06; mouse.z += (targetMouse.z - mouse.z) * 0.06;
-        planetShaderMaterial.uniforms.uTime.value = elapsed; planetShaderMaterial.uniforms.uMouse.value.copy(mouse);
-        ringShaderMaterial.uniforms.uTime.value = elapsed; ringShaderMaterial.uniforms.uMouse.value.copy(mouse);
-        nebulaMaterial.uniforms.uTime.value = elapsed; nebulaMaterial.uniforms.uMouse.value.copy(mouse);
-        planetBody.rotation.y = elapsed * 0.02; nebulaField.rotation.y = elapsed * 0.012; 
-        planetarySystem.rotation.y = -0.45 + (mouse.x * 0.04); planetarySystem.rotation.x = 0.38 + (mouse.y * 0.02);
-        starMaterial.opacity = 0.2 + Math.sin(elapsed * 2.0) * 0.08;
-        camera.position.x += (0 - camera.position.x) * 0.02; camera.position.y += (0 - camera.position.y) * 0.02; camera.position.z += (5.5 - camera.position.z) * 0.02;
-        renderer.render(scene, camera); window.requestAnimationFrame(tick);
-    };
-    tick();
-
-    window.addEventListener('resize', () => {
-        camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        if(window.innerWidth > 1024) { planetarySystem.position.set(2.4, -0.2, -1.0); } else { planetarySystem.position.set(0.0, -1.5, -2.0); }
-    });
-
-    const serviceCatalog = {
-        eCommerce: {
-            title: "Advanced E-Commerce & Online Business Powerhouses",
-            label: "Active: 🛒 Digital E-Shops",
-            cards: [
-                { icon: "fa-store", name: "High-Volume Digital Storefronts", desc: "Slick, lightning-fast virtual shops engineered to process endless buyer orders without lagging or crashing during major traffic surges.", tag: "Built Strict in 1 Week" },
-                { icon: "fa-credit-card", name: "Armored Payment Checkouts", desc: "Secured transactional funnels that protect customer card details and safely deposit funds directly into your balance vaults.", tag: "Tested for 30 Full Days" },
-                { icon: "fa-box-open", name: "Live Stock & Inventory Trackers", desc: "Automated back-end systems that update your item inventory instantly the second an order clears, preventing duplicate selling errors.", tag: "Completely Managed Support" },
-                { icon: "fa-chart-pie", name: "Buyer Metrics Panels", desc: "Simple visual sales dashboards that highlight your most profitable items without requiring tedious spreadsheet inputting.", tag: "Engineered to Earn Revenue" }
-            ]
-        },
-        workflows: {
-            title: "Personal & Business Efficiency Control Systems",
-            label: "Active: ⚡ Personal Efficiency",
-            cards: [
-                { icon: "fa-clock", name: "Zero-Waste Flow Routines", desc: "Bespoke software interfaces that take over repetitive data handling, instantly giving you back hours of creative design freedom.", tag: "Strict 1-Week Blueprint Delivery" },
-                { icon: "fa-arrows-spin", name: "Interconnected App Bridges", desc: "Flawlessly links your operational apps so information transfers on autopilot, totally removing the risk of manual data errors.", tag: "Includes 1 Month Safety Diagnostics" },
-                { icon: "fa-users", name: "Smart Team Access Hubs", desc: "Protected, high-speed digital boardrooms that allow employees to sync assignments smoothly without overlapping tasks.", tag: "Tailored to Boost Work Output" },
-                { icon: "fa-cloud", name: "Unbreachable Resource Banks", desc: "Centralized workspace storage structures built to manage media files safely and keep them instantly retrievable on any device.", tag: "No Lag, Only Peak Performance" }
-            ]
-        },
-        management: {
-            title: "Total Architecture Protection & Lifetime Care",
-            label: "Active: ⚙️ Fully Managed Care",
-            cards: [
-                { icon: "fa-user-shield", name: "Dedicated Server Guardians", desc: "Our global technical architects monitor your code frameworks daily to keep your entire layout running smoothly.", tag: "Backed by Parent Network Power" },
-                { icon: "fa-rotate", name: "Instant Daily Data Snapshots", desc: "Automatic background safety rollbacks ensure that your shop configurations remain fully preserved against unforeseen network errors.", tag: "Zero Human Effort Required" },
-                { icon: "fa-gauge-high", name: "Speed Optimization Tune-Ups", desc: "Regular server adjustments keep your platform loading in milliseconds on phone and desktop browsers across the globe.", tag: "Maintained by Core Specialists" },
-                { icon: "fa-life-ring", name: "Priority Strategy Helpline", desc: "Direct access to our senior design consultants to update text layouts, add product collections, or modify your workflow rules.", tag: "Always Active, Never Delayed" }
-            ]
-        }
-    };
-
-    function renderServices(type) {
-        const data = serviceCatalog[type]; if (!data) return;
-        document.getElementById("servicesTitle").textContent = data.title;
-        document.getElementById("currentStackLabel").textContent = data.label;
-        const container = document.getElementById("servicesGridContainer"); if (!container) return;
-        container.innerHTML = ""; 
-
-        data.cards.forEach((card, index) => {
-            const cardElement = document.createElement("article");
-            cardElement.className = `service-card reveal-element reveal-up delay-${(index % 4) + 1}`;
-            cardElement.innerHTML = `
-                <div class="icon-lg"><i class="fas ${card.icon}" aria-hidden="true"></i></div>
-                <h3>${card.name}</h3>
-                <p>${card.desc}</p>
-                <div class="deal-tag"><i class="fas fa-check" aria-hidden="true"></i> ${card.tag}</div>
+            // ---- SHARED NOISE ----
+            const glslNoiseAndLighting = `
+                float hash(float n) { return fract(sin(n) * 753.5453123); }
+                float noise(in vec3 x) {
+                    vec3 p = floor(x);
+                    vec3 f = fract(x);
+                    f = f*f*(3.0-2.0*f);
+                    float n = p.x + p.y*157.0 + 113.0*p.z;
+                    return mix(mix(mix(hash(n+0.0),hash(n+1.0),f.x),
+                                   mix(hash(n+157.0),hash(n+158.0),f.x),f.y),
+                               mix(mix(hash(n+113.0),hash(n+114.0),f.x),
+                                   mix(hash(n+270.0),hash(n+271.0),f.x),f.y),f.z);
+                }
+                float fbm(vec3 p) {
+                    float f = 0.0;
+                    f += 0.5000*noise(p); p = p*2.01;
+                    f += 0.2500*noise(p); p = p*2.02;
+                    f += 0.1250*noise(p);
+                    return f;
+                }
+                vec3 lightDir = normalize(vec3(0.7, 0.4, 0.8));
             `;
-            container.appendChild(cardElement);
-            if (window.scrollObserver) { window.scrollObserver.observe(cardElement); }
-        });
-    }
 
-    document.querySelectorAll(".switcher-btn").forEach(button => {
-        button.addEventListener("click", function() {
-            document.querySelectorAll(".switcher-btn").forEach(btn => btn.classList.remove("active"));
-            this.classList.add("active");
-            renderServices(this.getAttribute("data-stack"));
-        });
-    });
+            // ---- PLANET BODY (core) ----
+            const planetCount = 40000;
+            const planetPositions = new Float32Array(planetCount * 3);
+            for (let i = 0; i < planetCount; i++) {
+                const u = Math.random();
+                const v = Math.random();
+                const theta = u * 2.0 * Math.PI;
+                const phi = Math.acos(2.0 * v - 1.0);
+                const radius = 1.25 + (Math.random() * 0.005);
+                planetPositions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
+                planetPositions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
+                planetPositions[i * 3 + 2] = radius * Math.cos(phi);
+            }
+            const planetGeometry = new THREE.BufferGeometry();
+            planetGeometry.setAttribute('position', new THREE.BufferAttribute(planetPositions, 3));
 
-    document.addEventListener("DOMContentLoaded", () => {
-        const observerOptions = { root: null, rootMargin: "0px", threshold: 0.15 };
-        window.scrollObserver = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add("is-visible");
-                    observer.unobserve(entry.target); 
+            const planetShaderMaterial = new THREE.ShaderMaterial({
+                transparent: true,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false,
+                uniforms: {
+                    uTime: { value: 0 },
+                    uMouse: { value: new THREE.Vector3(0, 0, 0) }
+                },
+                vertexShader: `
+                    uniform float uTime;
+                    uniform vec3 uMouse;
+                    varying vec3 vNormal;
+                    varying vec3 vOrigPosition;
+                    varying float vCursorDist;
+                    void main() {
+                        vOrigPosition = position;
+                        vNormal = normalize(position);
+                        vec3 pos = position;
+                        vec4 worldPos = modelMatrix * vec4(pos, 1.0);
+                        float dist = distance(worldPos.xyz, uMouse);
+                        vCursorDist = dist;
+                        if (dist < 2.0) {
+                            float wave = sin(dist * 8.0 - uTime * 5.0) * 0.5 + 0.5;
+                            float force = pow(max(2.0 - dist, 0.0), 2.0) * 0.08;
+                            pos += vNormal * wave * force;
+                        }
+                        vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
+                        gl_Position = projectionMatrix * mvPosition;
+                        gl_PointSize = (15.0 / -mvPosition.z);
+                    }
+                `,
+                fragmentShader: `
+                    uniform float uTime;
+                    varying vec3 vNormal;
+                    varying vec3 vOrigPosition;
+                    varying float vCursorDist;
+                    ${glslNoiseAndLighting}
+                    void main() {
+                        if (distance(gl_PointCoord, vec2(0.5)) > 0.5) discard;
+                        float bandNoise = fbm(vec3(vOrigPosition.y * 5.0, uTime * 0.03, vOrigPosition.x * 1.5));
+                        float bandPattern = sin(vOrigPosition.y * 10.0 + bandNoise * 5.0);
+                        vec3 deepSpaceBlue = vec3(0.04, 0.15, 0.28);
+                        vec3 brightCyberCyan = vec3(0.25, 0.64, 0.83);
+                        vec3 finalColor = mix(deepSpaceBlue, brightCyberCyan, smoothstep(-0.3, 0.5, bandPattern));
+                        float shading = max(dot(vNormal, lightDir), 0.2);
+                        finalColor *= shading;
+                        if (vCursorDist < 2.0) {
+                            float glow = pow(max((2.0 - vCursorDist) * 0.5, 0.0), 2.0);
+                            finalColor = mix(finalColor, vec3(0.8, 0.95, 1.0), glow * 0.4);
+                        }
+                        gl_FragColor = vec4(finalColor, 0.75);
+                    }
+                `
+            });
+            const planetBody = new THREE.Points(planetGeometry, planetShaderMaterial);
+            planetarySystem.add(planetBody);
+
+            // ---- RING SYSTEM ----
+            const ringParticleCount = 60000;
+            const ringPositions = new Float32Array(ringParticleCount * 3);
+            const ringDistances = new Float32Array(ringParticleCount);
+            const ringAngles = new Float32Array(ringParticleCount);
+            for (let i = 0; i < ringParticleCount; i++) {
+                const innerRadius = 1.75;
+                const outerRadius = 3.65;
+                let randRadius = Math.random();
+                if ((randRadius > 0.3 && randRadius < 0.36) || (randRadius > 0.7 && randRadius < 0.73)) {
+                    randRadius += 0.08;
+                }
+                const currentRadius = innerRadius + (randRadius * (outerRadius - innerRadius));
+                const angle = Math.random() * Math.PI * 2;
+                ringPositions[i * 3] = Math.cos(angle) * currentRadius;
+                ringPositions[i * 3 + 1] = (Math.random() - 0.5) * 0.01;
+                ringPositions[i * 3 + 2] = Math.sin(angle) * currentRadius;
+                ringDistances[i] = currentRadius;
+                ringAngles[i] = angle;
+            }
+            const ringGeometry = new THREE.BufferGeometry();
+            ringGeometry.setAttribute('position', new THREE.BufferAttribute(ringPositions, 3));
+            ringGeometry.setAttribute('aRadius', new THREE.BufferAttribute(ringDistances, 1));
+            ringGeometry.setAttribute('aAngle', new THREE.BufferAttribute(ringAngles, 1));
+
+            const ringShaderMaterial = new THREE.ShaderMaterial({
+                transparent: true,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false,
+                uniforms: {
+                    uTime: { value: 0 },
+                    uMouse: { value: new THREE.Vector3(0, 0, 0) }
+                },
+                vertexShader: `
+                    uniform float uTime;
+                    uniform vec3 uMouse;
+                    attribute float aRadius;
+                    attribute float aAngle;
+                    varying float vRadius;
+                    varying float vDisruption;
+                    varying vec3 vLocalPos;
+                    void main() {
+                        vRadius = aRadius;
+                        vec3 pos = position;
+                        float orbitSpeed = uTime * (2.0 / sqrt(aRadius)) * 0.15;
+                        float currentAngle = aAngle + orbitSpeed;
+                        pos.x = cos(currentAngle) * aRadius;
+                        pos.z = sin(currentAngle) * aRadius;
+                        vec4 worldPos = modelMatrix * vec4(pos, 1.0);
+                        float dist = distance(worldPos.xyz, uMouse);
+                        vDisruption = 0.0;
+                        if (dist < 1.8) {
+                            float force = pow(max(1.8 - dist, 0.0), 2.0);
+                            pos.y += sin(aRadius * 20.0 + uTime * 4.0) * force * 0.1;
+                            pos.xz -= normalize(worldPos.xz - uMouse.xz) * force * 0.04;
+                            vDisruption = force * 0.3;
+                        }
+                        vLocalPos = pos;
+                        vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
+                        gl_Position = projectionMatrix * mvPosition;
+                        gl_PointSize = (8.0 / -mvPosition.z) * (1.0 + vDisruption * 0.5);
+                    }
+                `,
+                fragmentShader: `
+                    varying float vRadius;
+                    varying float vDisruption;
+                    varying vec3 vLocalPos;
+                    ${glslNoiseAndLighting}
+                    void main() {
+                        if (distance(gl_PointCoord, vec2(0.5)) > 0.5) discard;
+                        float waves = sin(vRadius * 120.0 + fbm(vLocalPos * 3.5) * 4.0);
+                        vec3 deepTeal = vec3(0.05, 0.32, 0.52);
+                        vec3 lightAzure = vec3(0.44, 0.77, 0.93);
+                        vec3 color = mix(deepTeal, lightAzure, smoothstep(-0.5, 0.5, waves));
+                        vec3 radialNormal = normalize(vec3(vLocalPos.x, 0.2, vLocalPos.z));
+                        float shadow = max(dot(radialNormal, lightDir), 0.3);
+                        color *= shadow;
+                        if (vDisruption > 0.0) {
+                            color = mix(color, vec3(1.0, 1.0, 1.0), vDisruption * 0.5);
+                        }
+                        float fade = smoothstep(1.75, 1.9, vRadius) * (1.0 - smoothstep(3.45, 3.65, vRadius));
+                        gl_FragColor = vec4(color, fade * 0.5);
+                    }
+                `
+            });
+            const ringSystem = new THREE.Points(ringGeometry, ringShaderMaterial);
+            planetarySystem.add(ringSystem);
+
+            // ---- ANIMATION LOOP ----
+            const clock = new THREE.Clock();
+
+            function tick() {
+                const elapsed = clock.getElapsedTime();
+
+                // smooth mouse follow
+                mouse.x += (targetMouse.x - mouse.x) * 0.06;
+                mouse.y += (targetMouse.y - mouse.y) * 0.06;
+                mouse.z += (targetMouse.z - mouse.z) * 0.06;
+
+                // update uniforms
+                planetShaderMaterial.uniforms.uTime.value = elapsed;
+                planetShaderMaterial.uniforms.uMouse.value.copy(mouse);
+                ringShaderMaterial.uniforms.uTime.value = elapsed;
+                ringShaderMaterial.uniforms.uMouse.value.copy(mouse);
+                nebulaMaterial.uniforms.uTime.value = elapsed;
+                nebulaMaterial.uniforms.uMouse.value.copy(mouse);
+
+                // rotations
+                planetBody.rotation.y = elapsed * 0.02;
+                nebulaField.rotation.y = elapsed * 0.012;
+                planetarySystem.rotation.y = -0.45 + (mouse.x * 0.04);
+                planetarySystem.rotation.x = 0.38 + (mouse.y * 0.02);
+
+                // star twinkle
+                starMaterial.opacity = 0.2 + Math.sin(elapsed * 2.0) * 0.08;
+
+                // camera drift
+                camera.position.x += (0 - camera.position.x) * 0.02;
+                camera.position.y += (0 - camera.position.y) * 0.02;
+                camera.position.z += (5.5 - camera.position.z) * 0.02;
+
+                renderer.render(scene, camera);
+                window.requestAnimationFrame(tick);
+            }
+
+            tick();
+
+            // ---- RESIZE ----
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+                if (window.innerWidth > 1024) {
+                    planetarySystem.position.set(2.4, -0.2, -1.0);
+                } else {
+                    planetarySystem.position.set(0.0, -1.5, -2.0);
                 }
             });
-        }, observerOptions);
+        })();
+    </script>
 
-        const itemsToReveal = document.querySelectorAll(".reveal-element");
-        itemsToReveal.forEach(el => window.scrollObserver.observe(el));
-        renderServices("eCommerce");
-    });
-
-    const sections = document.querySelectorAll("section, header, footer");
-    const navItems = document.querySelectorAll(".nav-item");
-
-    window.addEventListener("scroll", () => {
-        let currentSectionId = "home";
-        sections.forEach(section => {
-            const sectionTop = section.offsetTop;
-            if (pageYOffset >= sectionTop - 120) {
-                if(section.getAttribute("id")) { currentSectionId = section.getAttribute("id"); }
+    <!-- ============================================= -->
+    <!-- ===== APP.JS - LOAD POSTS ===== -->
+    <!-- ============================================= -->
+    <script>
+        // ===== LOAD POSTS =====
+        async function loadHomePosts() {
+            try {
+                console.log('🔍 Loading home posts...');
+                const response = await fetch('/api/posts');
+                console.log('📡 Response status:', response.status);
+                const posts = await response.json();
+                console.log('📚 Posts received:', posts.length);
+                
+                const container = document.getElementById('home-posts-grid');
+                if (!container) {
+                    console.error('❌ home-posts-grid not found!');
+                    return;
+                }
+                
+                if (!posts || posts.length === 0) {
+                    container.innerHTML = '<div class="text-muted text-center" style="padding:2rem;">No posts yet. Check back soon</div>';
+                    return;
+                }
+                
+                container.innerHTML = posts.slice(0, 4).map(function(post) {
+                    const imageHtml = post.image ? '<img src="' + post.image + '" alt="' + post.title + '">' : '<i class="fas fa-newspaper" style="font-size:3rem; color:#7bc5ff;"></i>';
+                    return '<div class="post-card" onclick="viewPost(\'' + post.id + '\')">' +
+                        '<div class="post-image" style="background:linear-gradient(135deg, rgba(64,164,212,0.2), rgba(123,197,255,0.1));">' +
+                            imageHtml +
+                        '</div>' +
+                        '<span class="post-tag"><i class="fas fa-tag"></i> ' + (post.type === 'image' ? 'Image Post' : 'Article') + '</span>' +
+                        '<h3>' + post.title + '</h3>' +
+                        '<p>' + (post.content ? post.content.substring(0, 120) : '') + (post.content && post.content.length > 120 ? '...' : '') + '</p>' +
+                        '<div class="post-stats">' +
+                            '<span><i class="fas fa-eye"></i> ' + (post.views || 0) + '</span>' +
+                            '<span><i class="fas fa-heart"></i> ' + (post.likes || 0) + '</span>' +
+                        '</div>' +
+                        '<div class="post-date"><i class="far fa-calendar-alt"></i> ' + (post.timestamp ? new Date(post.timestamp).toLocaleDateString() : '') + '</div>' +
+                    '</div>';
+                }).join('');
+                console.log('✅ Posts rendered successfully');
+            } catch (error) {
+                console.error('❌ Error loading posts:', error);
             }
+        }
+
+        function viewPost(id) {
+            fetch('/api/posts/' + id + '/view', { method: 'POST' }).catch(function() {});
+            showToast('Opening post...');
+        }
+
+        function showToast(message) {
+            var toast = document.getElementById('toast');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.id = 'toast';
+                toast.className = 'toast';
+                toast.innerHTML = '<i class="fas fa-info-circle"></i> <span id="toastMessage"></span>';
+                document.body.appendChild(toast);
+            }
+            var toastMsg = document.getElementById('toastMessage');
+            toastMsg.textContent = message;
+            toast.classList.add('show');
+            clearTimeout(window.toastTimeout);
+            window.toastTimeout = setTimeout(function() {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // ===== LOAD ON PAGE LOAD =====
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Page loaded');
+            loadHomePosts();
         });
-        navItems.forEach(item => {
-            item.classList.remove("active");
-            if (item.getAttribute("href") === `#${currentSectionId}`) { item.classList.add("active"); }
-        });
-    });
-</script>
+    </script>
 </body>
 </html>
